@@ -3,7 +3,7 @@ internal class Memory : IMemory
 {
     private readonly byte[] ram = new byte[2048];
     private readonly byte[] cartridge = new byte[0x8000];
-    private readonly Ppu ppu;
+    private readonly Ppu ppu; // a plugable model is more flexible but for simplicity we use a specific PPU instance
 
     public Memory(Ppu ppu)
     {

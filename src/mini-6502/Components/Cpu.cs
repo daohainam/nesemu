@@ -1,5 +1,5 @@
-﻿namespace mini_6502;
-internal class Cpu
+﻿namespace mini_6502.Components;
+internal class Cpu: IDebugable
 {
     // Registers
     public byte A; // Accumulator
@@ -22,13 +22,11 @@ internal class Cpu
 
     private readonly IMemory memory;
     private int cycles;
-    private readonly Instruction[] instructions = new Instruction[256];
 
     public Cpu(IMemory memory)
     {
         this.memory = memory;
         Reset();
-        InitInstructions();
     }
 
     public void Reset()
@@ -36,7 +34,7 @@ internal class Cpu
         A = X = Y = 0;
         SP = 0xFD;
         P = 0b0010_0100;
-        PC = (ushort)(memory.Read(0xFFFC) | (memory.Read(0xFFFD) << 8));
+        PC = (ushort)(memory.Read(0xFFFC) | memory.Read(0xFFFD) << 8);
         cycles = 0;
     }
 
@@ -45,8 +43,8 @@ internal class Cpu
         if (cycles == 0)
         {
             byte opcode = memory.Read(PC++);
-            Instruction instr = instructions[opcode];
-            instr.Execute(this, instr.Mode);
+            Instruction instr = InstructionSet.Instance[opcode];
+            instr.Execute(this, memory);
             cycles = instr.Cycles;
         }
         cycles--;
@@ -61,20 +59,9 @@ internal class Cpu
     }
 
     public bool GetFlag(byte flag) => (P & flag) != 0;
-    public string DumpRegisters()
+    public string Dump()
     {
         return $"A={A:X2} X={X:X2} Y={Y:X2} SP={SP:X2} PC={PC:X4} P=[N:{GetFlag(FLAG_NEGATIVE)} V:{GetFlag(FLAG_VOVERFLOW)} -:{(P & 0x20) != 0} B:{GetFlag(FLAG_BREAK)} D:{GetFlag(FLAG_DECIMAL)} I:{GetFlag(FLAG_INTERRUPT)} Z:{GetFlag(FLAG_ZERO)} C:{GetFlag(FLAG_CARRY)}]";
-    }
-
-    private void InitInstructions()
-    {
-        for (int i = 0; i < instructions.Length; i++)
-        {
-            instructions[i] = new InvalidOpcodeInstruction(i);
-        }
-
-        instructions[0xA9] = new Instruction("LDA", AddressingMode.Immediate, 2, OpLDA);
-        instructions[0xA5] = new Instruction("LDA", AddressingMode.ZeroPage, 3, OpLDA);
     }
 
     private ushort GetAddress(AddressingMode mode)
@@ -90,13 +77,10 @@ internal class Cpu
         }
     }
 
-    private static void Panic(string message)
+    public static void Panic(string message)
     {
         throw new PanicException(message);
     }
-
-    private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 
-        (cpu, mode) => Panic($"Invalid opcode({index:X4}) at {cpu.PC - 1:X4}."));
 
     private void OpLDA(Cpu cpu, AddressingMode mode)
     {
