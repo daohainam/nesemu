@@ -20,7 +20,7 @@ internal class InstructionSet
         //instructions[0xA5] = new Instruction("LDA", AddressingMode.ZeroPage, 3, OpLDA);
     }
 
-    private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1,
+    private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,
     (cpu, mode) => Cpu.Panic($"Invalid opcode({index:X4}) at {cpu.PC - 1:X4}."));
 
     public Instruction this[byte opcode] => instructions[opcode];

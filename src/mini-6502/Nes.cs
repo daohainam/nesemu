@@ -37,18 +37,16 @@ public class Nes
     {
         ppu.Clock();
         cpu.Clock();
-
-
     }
 
     public void LoadRom(byte[] romData)
     {
         if (romData.Length < 0x8000)
             throw new ArgumentException("ROM data must be at least 32KB long.");
-        for (int i = 0; i < 0x8000; i++)
-        {
-            memory.Write((ushort)(0x8000 + i), romData[i]);
-        }
+
+        memory.LoadCartridge(romData);
+        memory.Write(0xFFFC, 0x00); // Reset vector low byte
+        memory.Write(0xFFFD, 0x80); // Reset vector high byte
     }
 
     public async Task RunAsync(CancellationToken cancellationToken = default)
@@ -57,8 +55,10 @@ public class Nes
         while (!cancellationToken.IsCancellationRequested)
         {
             var startTime = DateTime.UtcNow;
+
+            Console.WriteLine("Clock!");
             Clock();
-            
+
             var timeElapsed = DateTime.UtcNow - startTime;
             if (timeElapsed.TotalMilliseconds < milliSecondsPerClock)
             {

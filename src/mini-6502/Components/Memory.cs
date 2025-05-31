@@ -61,4 +61,11 @@ internal class Memory : IMemory
             // TODO: xử lý APU, cartridge RAM, v.v.
         }
     }
+
+    public void LoadCartridge(byte[] data)
+    {
+        if (data.Length > cartridge.Length)
+            throw new ArgumentException("Cartridge data exceeds maximum size.");
+        Array.Copy(data, cartridge, data.Length);
+    }
 }

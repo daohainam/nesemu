@@ -1,0 +1,1 @@
+﻿This folder contains the NES files downloaded from https://github.com/christopherpow/nes-test-roms.
