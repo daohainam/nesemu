@@ -27,7 +27,7 @@ public class NesRomHeader
         if (readOnlySpan.Length < HeaderSize)
             throw new ArgumentException("Header data is too short.");
 
-        readOnlySpan.Slice(0, 4).CopyTo(MagicNumber);
+        readOnlySpan[..4].CopyTo(MagicNumber);
         PrgRomSize = readOnlySpan[4];
         ChrRomSize = readOnlySpan[5];
         Flags6 = readOnlySpan[6];
