@@ -1,4 +1,7 @@
 ﻿using mini_6502.Components;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("UnitTests")]
 
 namespace mini_6502;
 public class Nes

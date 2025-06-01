@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryRunner", "Tests\Binar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rom-loader", "src\rom-loader\rom-loader.csproj", "{CE83A6A6-D52D-43BF-982C-28A6154A2C1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{CFB62540-28AE-40EC-8692-33C37531AB4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,12 +31,17 @@ Global
 		{CE83A6A6-D52D-43BF-982C-28A6154A2C1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE83A6A6-D52D-43BF-982C-28A6154A2C1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE83A6A6-D52D-43BF-982C-28A6154A2C1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFB62540-28AE-40EC-8692-33C37531AB4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFB62540-28AE-40EC-8692-33C37531AB4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFB62540-28AE-40EC-8692-33C37531AB4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFB62540-28AE-40EC-8692-33C37531AB4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FC7D269E-D123-49F6-BC45-EACC78AAE08C} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{CFB62540-28AE-40EC-8692-33C37531AB4B} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B86CFA6F-1D98-4F43-A1FB-4D95AB2D9593}
