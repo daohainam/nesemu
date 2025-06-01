@@ -48,6 +48,10 @@ internal class Cpu: IDebugable
     }
 
     public bool GetFlag(byte flag) => (P & flag) != 0;
+    internal int Cycles { 
+        get => cycles;
+        set => cycles = value;
+    }
     public string Dump()
     {
         return $"A={A:X2} X={X:X2} Y={Y:X2} SP={SP:X2} PC={PC:X4} P=[N:{GetFlag(Flags.FLAG_NEGATIVE)} V:{GetFlag(Flags.FLAG_VOVERFLOW)} -:{(P & 0x20) != 0} B:{GetFlag(Flags.FLAG_BREAK)} D:{GetFlag(Flags.FLAG_DECIMAL)} I:{GetFlag(Flags.FLAG_INTERRUPT)} Z:{GetFlag(Flags.FLAG_ZERO)} C:{GetFlag(Flags.FLAG_CARRY)}]";
