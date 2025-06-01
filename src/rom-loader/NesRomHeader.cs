@@ -17,19 +17,8 @@ public class NesRomHeader
     public byte Flags9 { get; set; } // Flags 9
     public byte Flags10 { get; set; } // Flags 10
     public ushort MapperId => (ushort)((Flags6 >> 4) | (Flags7 & 0xF0));
-    public NesRomHeader(byte[] headerData)
+    public NesRomHeader(byte[] headerData): this(headerData.AsSpan())
     {
-        if (headerData.Length < HeaderSize)
-            throw new ArgumentException("Header data is too short.");
-
-        Array.Copy(headerData, MagicNumber, 4);
-        PrgRomSize = headerData[4];
-        ChrRomSize = headerData[5];
-        Flags6 = headerData[6];
-        Flags7 = headerData[7];
-        PrgRamSize = headerData[8];
-        Flags9 = headerData[9];
-        Flags10 = headerData[10];
     }
 
     public NesRomHeader(ReadOnlySpan<byte> readOnlySpan)
