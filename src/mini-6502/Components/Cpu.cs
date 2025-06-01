@@ -9,17 +9,6 @@ internal class Cpu: IDebugable
     public ushort PC; // Program Counter (địa chỉ lệnh tiếp theo)
     public byte P; // Processor Status Register
 
-
-    // Flags
-    private const byte FLAG_CARRY = 1 << 0;
-    private const byte FLAG_ZERO = 1 << 1;
-    private const byte FLAG_INTERRUPT = 1 << 2;
-    private const byte FLAG_DECIMAL = 1 << 3;
-    private const byte FLAG_BREAK = 1 << 4;
-    private const byte FLAG_UNUSED = 1 << 5; // Unused
-    private const byte FLAG_VOVERFLOW = 1 << 6;
-    private const byte FLAG_NEGATIVE = 1 << 7;
-
     private readonly IMemory memory;
     private int cycles;
 
@@ -44,7 +33,7 @@ internal class Cpu: IDebugable
         {
             byte opcode = memory.Read(PC++);
             Instruction instr = InstructionSet.Instance[opcode];
-            instr.Execute(this, memory);
+            instr.Execute(this, memory, instr.Mode);
             cycles = instr.Cycles;
         }
         cycles--;
@@ -61,7 +50,7 @@ internal class Cpu: IDebugable
     public bool GetFlag(byte flag) => (P & flag) != 0;
     public string Dump()
     {
-        return $"A={A:X2} X={X:X2} Y={Y:X2} SP={SP:X2} PC={PC:X4} P=[N:{GetFlag(FLAG_NEGATIVE)} V:{GetFlag(FLAG_VOVERFLOW)} -:{(P & 0x20) != 0} B:{GetFlag(FLAG_BREAK)} D:{GetFlag(FLAG_DECIMAL)} I:{GetFlag(FLAG_INTERRUPT)} Z:{GetFlag(FLAG_ZERO)} C:{GetFlag(FLAG_CARRY)}]";
+        return $"A={A:X2} X={X:X2} Y={Y:X2} SP={SP:X2} PC={PC:X4} P=[N:{GetFlag(Flags.FLAG_NEGATIVE)} V:{GetFlag(Flags.FLAG_VOVERFLOW)} -:{(P & 0x20) != 0} B:{GetFlag(Flags.FLAG_BREAK)} D:{GetFlag(Flags.FLAG_DECIMAL)} I:{GetFlag(Flags.FLAG_INTERRUPT)} Z:{GetFlag(Flags.FLAG_ZERO)} C:{GetFlag(Flags.FLAG_CARRY)}]";
     }
 
     private ushort GetAddress(AddressingMode mode)
@@ -80,14 +69,5 @@ internal class Cpu: IDebugable
     public static void Panic(string message)
     {
         throw new PanicException(message);
-    }
-
-    private void OpLDA(Cpu cpu, AddressingMode mode)
-    {
-        ushort addr = GetAddress(mode);
-        byte value = memory.Read(addr);
-        A = value;
-        SetFlag(FLAG_ZERO, A == 0);
-        SetFlag(FLAG_NEGATIVE, (A & 0x80) != 0);
     }
 }
