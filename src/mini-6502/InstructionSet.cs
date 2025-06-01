@@ -28,6 +28,20 @@ internal partial class InstructionSet
         instructions[0xB1] = new Instruction("LDA", AddressingMode.IndirectY, 5, 2, OpLDA);
     }
 
+    private static byte ReadMemory(ushort address, IMemory memory, AddressingMode mode)
+    {
+        return mode switch
+        {
+            AddressingMode.Immediate => memory.Read(address),
+            AddressingMode.ZeroPage => memory.Read(memory.Read(address)),
+            AddressingMode.ZeroPageX => memory.Read((byte)(memory.Read(address) + 1)), // Assuming X is added to the zero page address
+            AddressingMode.Absolute => memory.Read((ushort)(memory.Read(address) | (ushort)(memory.Read((ushort)(address + 1)) << 8))),
+            AddressingMode.AbsoluteX => memory.Read((ushort)(memory.Read(address) | (ushort)(memory.Read((ushort)(address + 1)) << 8) + 1)), // Assuming X is added to the absolute address
+            _ => throw new InvalidOperationException($"Unsupported addressing mode: {mode}")
+        };
+    }
+
+
     private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,
     (cpu, memory, mode) => Cpu.Panic($"Invalid opcode({index:X4}) at {cpu.PC - 1:X4}."));
 
