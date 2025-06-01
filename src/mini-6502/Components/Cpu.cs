@@ -33,7 +33,7 @@ internal class Cpu: IDebugable
     {
         A = X = Y = 0;
         SP = 0xFD;
-        P = 0b0010_0100;
+        P = 0b0011_0100;
         PC = (ushort)(memory.Read(0xFFFC) | memory.Read(0xFFFD) << 8);
         cycles = 7;
     }
