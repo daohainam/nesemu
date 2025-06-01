@@ -52,4 +52,20 @@ public class Instruction_Tests
         Assert.Equal(0x8002, cpu.PC); // PC should increment by 2 (1 for opcode + 1 for address)
     }
 
+    [Fact]
+    public void LDA_Absolute_Instruction_Test()
+    {
+        ushort address = 0x1234;
+        cpu.PC = 0x8000;
+        memory.Write((ushort)(cpu.PC), 0xAD); // LDA Absolute opcode
+        memory.Write((ushort)(cpu.PC + 1), (byte)(address & 0xFF)); // Low byte of address
+        memory.Write((ushort)(cpu.PC + 2), (byte)(address >> 8)); // High byte of address
+        memory.Write(address, defaultTestValue); // Write value to absolute address
+        
+        cpu.Clock();
+
+        Assert.Equal(defaultTestValue, cpu.A);
+        Assert.Equal(0x8003, cpu.PC); // PC should increment by 3 (1 for opcode + 2 for address)
+    }
+
 }
