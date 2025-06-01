@@ -9,8 +9,8 @@ public class Instruction_Tests
     private readonly Memory memory;
     private readonly Cpu cpu;
 
-    private byte defaultTestValue = 0xCF;
-    private ushort cartridgeAddress = 0x8000;
+    private readonly byte defaultTestValue = 0xCF;
+    private readonly ushort cartridgeAddress = 0x8000;
 
     public Instruction_Tests()
     {
