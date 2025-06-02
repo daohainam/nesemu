@@ -2,5 +2,5 @@
 internal interface IMemory
 {
     byte Read(ushort address);
-    void Write(ushort address, byte value);
+    void Write(ushort address, byte value);    
 }

@@ -34,7 +34,7 @@ internal partial class InstructionSet
         {
             AddressingMode.Immediate => memory.Read(address),
             AddressingMode.ZeroPage => memory.Read(memory.Read(address)),
-            AddressingMode.ZeroPageX => memory.Read((byte)(memory.Read(address) + 1)), // Assuming X is added to the zero page address
+            AddressingMode.ZeroPageX => memory.Read((byte)(memory.Read(address) + 1)),
             AddressingMode.Absolute => memory.Read((ushort)(memory.Read(address) | (ushort)(memory.Read((ushort)(address + 1)) << 8))),
             AddressingMode.AbsoluteX => memory.Read((ushort)(memory.Read(address) | (ushort)(memory.Read((ushort)(address + 1)) << 8) + 1)), // Assuming X is added to the absolute address
             _ => throw new InvalidOperationException($"Unsupported addressing mode: {mode}")
