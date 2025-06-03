@@ -4,42 +4,7 @@ namespace mini_6502.Instructions;
 internal class InstructionSet_LoadStore
 {
 
-    private static byte ReadMemory(Cpu cpu, IMemory memory, AddressingMode mode)
-    {
-        switch (mode)
-        {
-            case AddressingMode.Immediate:
-                return memory.Read(cpu.PC++);
-            case AddressingMode.ZeroPage:
-                return memory.Read(memory.Read(cpu.PC++));
-            case AddressingMode.ZeroPageX:
-                return memory.Read((byte)(memory.Read(cpu.PC++) + cpu.X));
-            case AddressingMode.Absolute:
-                ushort address = (ushort)(memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8));
-                return memory.Read(address);
-            case AddressingMode.AbsoluteX:
-                address = (ushort)(memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8));
-                return memory.Read((ushort)(address + cpu.X));
-            case AddressingMode.AbsoluteY:
-                address = (ushort)(memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8));
-                return memory.Read((ushort)(address + cpu.Y));
-            case AddressingMode.IndirectX:
-                byte zpAddress = memory.Read(cpu.PC++);
-                ushort indirectAddress = (ushort)(zpAddress + cpu.X);
-                ushort addressLow = memory.Read(indirectAddress);
-                ushort addressHigh = memory.Read((ushort)((indirectAddress + 1) & 0xFF)); // Wrap around for zero page
-                return memory.Read((ushort)(addressHigh << 8 | addressLow));
-            case AddressingMode.IndirectY:
-                zpAddress = memory.Read(cpu.PC++);
-                indirectAddress = (ushort)(zpAddress + cpu.Y);
-                addressLow = memory.Read(indirectAddress);
-                addressHigh = memory.Read((ushort)((indirectAddress + 1) & 0xFF)); // Wrap around for zero page
-                return memory.Read((ushort)(addressHigh << 8 | addressLow));
-            default:
-                Cpu.Panic($"Unsupported addressing mode: {mode}");
-                return 0; // Unreachable, but required to satisfy the compiler
-        }
-    }
+    
     internal static void OpLDA(Cpu cpu, IMemory memory, AddressingMode mode)
     {
         switch (mode)
@@ -76,49 +41,49 @@ internal class InstructionSet_LoadStore
 
     private static void OpLDAIndirectY(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu, memory, AddressingMode.IndirectY);
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, AddressingMode.IndirectY);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
     }
 
     private static void OpLDAIndirectX(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu, memory, AddressingMode.IndirectX);
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, AddressingMode.IndirectX);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
     }
 
     private static void OpLDAAbsoluteY(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu, memory, AddressingMode.AbsoluteY);
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, AddressingMode.AbsoluteY);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
     }
 
     private static void OpLDAAbsoluteX(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu, memory, AddressingMode.AbsoluteX);
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, AddressingMode.AbsoluteX);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
     }
 
     private static void OpLDAZeroPageX(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu, memory, AddressingMode.ZeroPageX);
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, AddressingMode.ZeroPageX);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
     }
 
     private static void OpLDAAbsolute(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu, memory, AddressingMode.Absolute);
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, AddressingMode.Absolute);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
     }
 
     private static void OpLDAZeroPage(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu, memory, AddressingMode.ZeroPage);
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, AddressingMode.ZeroPage);
 
         cpu.A = value;
         cpu.SetFlagsByValue(value);
@@ -126,7 +91,7 @@ internal class InstructionSet_LoadStore
 
     private static void OpLDAImmediate(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu, memory, AddressingMode.Immediate);
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, AddressingMode.Immediate);
 
         cpu.A = value;
         cpu.SetFlagsByValue(value);
