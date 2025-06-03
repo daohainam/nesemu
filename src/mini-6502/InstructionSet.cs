@@ -27,6 +27,18 @@ internal partial class InstructionSet
         instructions[0xB9] = new Instruction("LDA", AddressingMode.AbsoluteY, 4, 3, InstructionSet_LoadStore.OpLDA);
         instructions[0xA1] = new Instruction("LDA", AddressingMode.IndirectX, 6, 2, InstructionSet_LoadStore.OpLDA);
         instructions[0xB1] = new Instruction("LDA", AddressingMode.IndirectY, 5, 2, InstructionSet_LoadStore.OpLDA);
+
+        instructions[0xA2] = new Instruction("LDX", AddressingMode.Immediate, 2, 2, InstructionSet_LoadStore.OpLDX);
+        instructions[0xA6] = new Instruction("LDX", AddressingMode.ZeroPage, 3, 2, InstructionSet_LoadStore.OpLDX);
+        instructions[0xB6] = new Instruction("LDX", AddressingMode.ZeroPageY, 4, 2, InstructionSet_LoadStore.OpLDX);
+        instructions[0xAE] = new Instruction("LDX", AddressingMode.Absolute, 4, 3, InstructionSet_LoadStore.OpLDX);
+        instructions[0xBE] = new Instruction("LDX", AddressingMode.AbsoluteY, 4, 3, InstructionSet_LoadStore.OpLDX);
+
+        instructions[0xA0] = new Instruction("LDY", AddressingMode.Immediate, 2, 2, InstructionSet_LoadStore.OpLDY);
+        instructions[0xA4] = new Instruction("LDY", AddressingMode.ZeroPage, 3, 2, InstructionSet_LoadStore.OpLDY);
+        instructions[0xB4] = new Instruction("LDY", AddressingMode.ZeroPageX, 4, 2, InstructionSet_LoadStore.OpLDY);
+        instructions[0xAC] = new Instruction("LDY", AddressingMode.Absolute, 4, 3, InstructionSet_LoadStore.OpLDY);
+        instructions[0xBC] = new Instruction("LDY", AddressingMode.AbsoluteX, 4, 3, InstructionSet_LoadStore.OpLDY);
     }
 
     private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,

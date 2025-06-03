@@ -13,6 +13,8 @@ internal class InstructionHelpers
                 return memory.Read(memory.Read(cpu.PC++));
             case AddressingMode.ZeroPageX:
                 return memory.Read((byte)(memory.Read(cpu.PC++) + cpu.X));
+            case AddressingMode.ZeroPageY:
+                return memory.Read((byte)(memory.Read(cpu.PC++) + cpu.Y));
             case AddressingMode.Absolute:
                 ushort address = (ushort)(memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8));
                 return memory.Read(address);
