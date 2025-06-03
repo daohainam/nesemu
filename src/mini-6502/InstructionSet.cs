@@ -71,6 +71,37 @@ internal partial class InstructionSet
         instructions[0x68] = new Instruction("PLA", AddressingMode.Implied, 4, 1, InstructionSet_Stack.OpPLA);
         instructions[0x28] = new Instruction("PLP", AddressingMode.Implied, 4, 1, InstructionSet_Stack.OpPLP);
 
+        // Logic Instructions
+        instructions[0x29] = new Instruction("AND", AddressingMode.Immediate, 2, 2, InstructionSet_Logical.OpAND);
+        instructions[0x25] = new Instruction("AND", AddressingMode.ZeroPage, 3, 2, InstructionSet_Logical.OpAND);
+        instructions[0x35] = new Instruction("AND", AddressingMode.ZeroPageX, 4, 2, InstructionSet_Logical.OpAND);
+        instructions[0x2D] = new Instruction("AND", AddressingMode.Absolute, 4, 3, InstructionSet_Logical.OpAND);
+        instructions[0x3D] = new Instruction("AND", AddressingMode.AbsoluteX, 4, 3, InstructionSet_Logical.OpAND);
+        instructions[0x39] = new Instruction("AND", AddressingMode.AbsoluteY, 4, 3, InstructionSet_Logical.OpAND);
+        instructions[0x21] = new Instruction("AND", AddressingMode.IndirectX, 6, 2, InstructionSet_Logical.OpAND);
+        instructions[0x31] = new Instruction("AND", AddressingMode.IndirectY, 5, 2, InstructionSet_Logical.OpAND);
+        instructions[0x49] = new Instruction("EOR", AddressingMode.Immediate, 5, 2, InstructionSet_Logical.OpEOR);
+        instructions[0x45] = new Instruction("EOR", AddressingMode.ZeroPage, 3, 2, InstructionSet_Logical.OpEOR);
+        instructions[0x55] = new Instruction("EOR", AddressingMode.ZeroPageX, 4, 2, InstructionSet_Logical.OpEOR);
+        instructions[0x4D] = new Instruction("EOR", AddressingMode.Absolute, 4, 3, InstructionSet_Logical.OpEOR);
+        instructions[0x5D] = new Instruction("EOR", AddressingMode.AbsoluteX, 4, 3, InstructionSet_Logical.OpEOR);
+        instructions[0x59] = new Instruction("EOR", AddressingMode.AbsoluteY, 4, 3, InstructionSet_Logical.OpEOR);
+        instructions[0x41] = new Instruction("EOR", AddressingMode.IndirectX, 6, 2, InstructionSet_Logical.OpEOR);
+        instructions[0x51] = new Instruction("EOR", AddressingMode.IndirectY, 5, 2, InstructionSet_Logical.OpEOR);
+        instructions[0x09] = new Instruction("ORA", AddressingMode.Immediate, 2, 2, InstructionSet_Logical.OpORA);
+        instructions[0x05] = new Instruction("ORA", AddressingMode.ZeroPage, 3, 2, InstructionSet_Logical.OpORA);
+        instructions[0x15] = new Instruction("ORA", AddressingMode.ZeroPageX, 4, 2, InstructionSet_Logical.OpORA);
+        instructions[0x0D] = new Instruction("ORA", AddressingMode.Absolute, 4, 3, InstructionSet_Logical.OpORA);
+        instructions[0x1D] = new Instruction("ORA", AddressingMode.AbsoluteX, 4, 3, InstructionSet_Logical.OpORA);
+        instructions[0x19] = new Instruction("ORA", AddressingMode.AbsoluteY, 4, 3, InstructionSet_Logical.OpORA);
+        instructions[0x01] = new Instruction("ORA", AddressingMode.IndirectX, 6, 2, InstructionSet_Logical.OpORA);
+        instructions[0x11] = new Instruction("ORA", AddressingMode.IndirectY, 5, 2, InstructionSet_Logical.OpORA);
+        instructions[0x24] = new Instruction("BIT", AddressingMode.ZeroPage, 3, 2, InstructionSet_Logical.OpBIT);
+        instructions[0x2C] = new Instruction("BIT", AddressingMode.Absolute, 4, 3, InstructionSet_Logical.OpBIT);
+
+
+
+
     }
 
     private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,
