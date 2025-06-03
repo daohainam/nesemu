@@ -63,4 +63,56 @@ internal class InstructionSet_LoadStore
                 break;
         }
     }
+    internal static void OpSTA(Cpu cpu, IMemory memory, AddressingMode mode)
+    {
+        switch (mode)
+        {
+            case AddressingMode.ZeroPage:
+            case AddressingMode.ZeroPageX:
+            case AddressingMode.Absolute:
+            case AddressingMode.AbsoluteX:
+            case AddressingMode.AbsoluteY:
+            case AddressingMode.IndirectX:
+            case AddressingMode.IndirectY:
+                InstructionHelpers.WriteMemory(cpu, memory, mode, cpu.A);
+                break;
+            default:
+                Cpu.Panic($"STA: Unsupported addressing mode: {mode}");
+                break;
+        }
+    }
+
+    internal static void OpSTX(Cpu cpu, IMemory memory, AddressingMode mode)
+    {
+        switch (mode)
+        {
+            case AddressingMode.ZeroPage:
+            case AddressingMode.ZeroPageY:
+            case AddressingMode.Absolute:
+            case AddressingMode.AbsoluteY:
+                InstructionHelpers.WriteMemory(cpu, memory, mode, cpu.X);
+                break;
+            default:
+                Cpu.Panic($"STX: Unsupported addressing mode: {mode}");
+                break;
+        }
+    }
+
+    internal static void OpSTY(Cpu cpu, IMemory memory, AddressingMode mode)
+    {
+        switch (mode)
+        {
+            case AddressingMode.ZeroPage:
+            case AddressingMode.ZeroPageX:
+            case AddressingMode.Absolute:
+            case AddressingMode.AbsoluteX:
+                InstructionHelpers.WriteMemory(cpu, memory, mode, cpu.Y);
+                break;
+            default:
+                Cpu.Panic($"STY: Unsupported addressing mode: {mode}");
+                break;
+        }
+    }
+
+
 }

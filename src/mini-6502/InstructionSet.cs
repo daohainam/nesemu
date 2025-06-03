@@ -39,6 +39,23 @@ internal partial class InstructionSet
         instructions[0xB4] = new Instruction("LDY", AddressingMode.ZeroPageX, 4, 2, InstructionSet_LoadStore.OpLDY);
         instructions[0xAC] = new Instruction("LDY", AddressingMode.Absolute, 4, 3, InstructionSet_LoadStore.OpLDY);
         instructions[0xBC] = new Instruction("LDY", AddressingMode.AbsoluteX, 4, 3, InstructionSet_LoadStore.OpLDY);
+
+        // Store Instructions
+        instructions[0x85] = new Instruction("STA", AddressingMode.ZeroPage, 3, 2, InstructionSet_LoadStore.OpSTA);
+        instructions[0x95] = new Instruction("STA", AddressingMode.ZeroPageX, 4, 2, InstructionSet_LoadStore.OpSTA);
+        instructions[0x8D] = new Instruction("STA", AddressingMode.Absolute, 4, 3, InstructionSet_LoadStore.OpSTA);
+        instructions[0x9D] = new Instruction("STA", AddressingMode.AbsoluteX, 5, 3, InstructionSet_LoadStore.OpSTA);
+        instructions[0x99] = new Instruction("STA", AddressingMode.AbsoluteY, 5, 3, InstructionSet_LoadStore.OpSTA);
+        instructions[0x81] = new Instruction("STA", AddressingMode.IndirectX, 6, 2, InstructionSet_LoadStore.OpSTA);
+        instructions[0x91] = new Instruction("STA", AddressingMode.IndirectY, 6, 2, InstructionSet_LoadStore.OpSTA);
+
+        instructions[0x86] = new Instruction("STX", AddressingMode.ZeroPage, 3, 2, InstructionSet_LoadStore.OpSTX);
+        instructions[0x96] = new Instruction("STX", AddressingMode.ZeroPageY, 4, 2, InstructionSet_LoadStore.OpSTX);
+        instructions[0x8E] = new Instruction("STX", AddressingMode.Absolute, 4, 3, InstructionSet_LoadStore.OpSTX);
+
+        instructions[0x84] = new Instruction("STY", AddressingMode.ZeroPage, 3, 2, InstructionSet_LoadStore.OpSTY);
+        instructions[0x94] = new Instruction("STY", AddressingMode.ZeroPageX, 4, 2, InstructionSet_LoadStore.OpSTY);
+        instructions[0x8C] = new Instruction("STY", AddressingMode.Absolute, 4, 3, InstructionSet_LoadStore.OpSTY);
     }
 
     private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,
