@@ -4,15 +4,15 @@ using Newtonsoft.Json.Linq;
 namespace UnitTests;
 public partial class Instruction_Tests_Arithmetic: Instruction_Tests
 {
-    public static readonly IEnumerable<object[]> ArithmeticTestData =
-    [
-        [0x00, 0x00, true, true, false], // Zero Page
-        [0x10, 0x10, true, true, false], // Zero Page X
-        [0x20, 0x10, false, true, false], // Absolute
-        [0xFF, 0x01, false, true, true], // Absolute X
-        [0x80, 0x7F, false, true, false], // Absolute Y
-        [0x7F, 0x80, false, false, true] // Indirect X
-    ];
+    public static readonly TheoryData<byte, byte, bool, bool, bool> CompareTestData = new()
+    {
+        { 0x00, 0x00, true, true, false }, // Zero Page
+        { 0x10, 0x10, true, true, false }, // Zero Page X
+        { 0x20, 0x10, false, true, false }, // Absolute
+        { 0xFF, 0x01, false, true, true }, // Absolute X
+        { 0x80, 0x7F, false, true, false }, // Absolute Y
+        { 0x7F, 0x80, false, false, true }  // Indirect X
+    };
 
     [Fact]
     public void ADC_Immediate_Instruction_Test()
@@ -24,6 +24,9 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
         cpu.Clock();
         Assert.Equal(0x30, cpu.A);
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
+        Assert.False(cpu.GetFlag(Flags.FLAG_CARRY)); 
+        Assert.False(cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.False(cpu.GetFlag(Flags.FLAG_NEGATIVE));
     }
 
     [Fact]
@@ -363,7 +366,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(ArithmeticTestData))]
+    [MemberData(nameof(CompareTestData))]
     public void CPX_Immediate_Instruction_Test(byte x, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.X = x;
@@ -379,7 +382,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(ArithmeticTestData))]
+    [MemberData(nameof(CompareTestData))]
     public void CPX_ZeroPage_Instruction_Test(byte x, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.X = x;
@@ -396,7 +399,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(ArithmeticTestData))]
+    [MemberData(nameof(CompareTestData))]
     public void CPX_Absolute_Instruction_Test(byte x, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.X = x;
@@ -414,7 +417,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(ArithmeticTestData))]
+    [MemberData(nameof(CompareTestData))]
     public void CPY_Immediate_Instruction_Test(byte y, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.Y = y;
@@ -430,7 +433,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(ArithmeticTestData))]
+    [MemberData(nameof(CompareTestData))]
     public void CPY_ZeroPage_Instruction_Test(byte y, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.Y = y;
@@ -447,7 +450,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(ArithmeticTestData))]
+    [MemberData(nameof(CompareTestData))]
     public void CPY_Absolute_Instruction_Test(byte y, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.Y = y;
