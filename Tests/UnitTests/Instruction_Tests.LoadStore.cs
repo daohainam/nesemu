@@ -1,7 +1,4 @@
 ﻿namespace UnitTests;
-
-using mini_6502.Components;
-
 public partial class Instruction_Tests
 {
     [Fact]

@@ -18,7 +18,7 @@ internal partial class InstructionSet
             instructions[i] = new InvalidOpcodeInstruction(i);
         }
 
-        // Load/Store Instructions
+        // Load Instructions
         instructions[0xA9] = new Instruction("LDA", AddressingMode.Immediate, 2, 2, InstructionSet_LoadStore.OpLDA);
         instructions[0xA5] = new Instruction("LDA", AddressingMode.ZeroPage, 3, 2, InstructionSet_LoadStore.OpLDA);
         instructions[0xB5] = new Instruction("LDA", AddressingMode.ZeroPageX, 4, 2, InstructionSet_LoadStore.OpLDA);
@@ -56,6 +56,21 @@ internal partial class InstructionSet
         instructions[0x84] = new Instruction("STY", AddressingMode.ZeroPage, 3, 2, InstructionSet_LoadStore.OpSTY);
         instructions[0x94] = new Instruction("STY", AddressingMode.ZeroPageX, 4, 2, InstructionSet_LoadStore.OpSTY);
         instructions[0x8C] = new Instruction("STY", AddressingMode.Absolute, 4, 3, InstructionSet_LoadStore.OpSTY);
+
+        // Transfer Instructions
+        instructions[0xAA] = new Instruction("TAX", AddressingMode.Implied, 2, 2, InstructionSet_RegisterTransfer.OpTAX);
+        instructions[0xA8] = new Instruction("TAY", AddressingMode.Implied, 2, 2, InstructionSet_RegisterTransfer.OpTAY);
+        instructions[0x8A] = new Instruction("TXA", AddressingMode.Implied, 2, 2, InstructionSet_RegisterTransfer.OpTXA);
+        instructions[0x98] = new Instruction("TYA", AddressingMode.Implied, 2, 2, InstructionSet_RegisterTransfer.OpTYA);
+        instructions[0xBA] = new Instruction("TSX", AddressingMode.Implied, 2, 2, InstructionSet_RegisterTransfer.OpTSX);
+        instructions[0x9A] = new Instruction("TXS", AddressingMode.Implied, 2, 2, InstructionSet_RegisterTransfer.OpTXS);
+
+        // Stack Instructions
+        instructions[0x48] = new Instruction("PHA", AddressingMode.Implied, 3, 1, InstructionSet_Stack.OpPHA);
+        instructions[0x08] = new Instruction("PHP", AddressingMode.Implied, 3, 1, InstructionSet_Stack.OpPHP);
+        instructions[0x68] = new Instruction("PLA", AddressingMode.Implied, 4, 1, InstructionSet_Stack.OpPLA);
+        instructions[0x28] = new Instruction("PLP", AddressingMode.Implied, 4, 1, InstructionSet_Stack.OpPLP);
+
     }
 
     private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,
