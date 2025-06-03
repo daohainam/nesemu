@@ -62,6 +62,12 @@ internal class Memory : IMemory
         }
     }
 
+    public byte this[ushort i]
+    {
+        get => Read(i);
+        set => Write(i, value);
+    }
+
     public void LoadCartridge(byte[] data)
     {
         if (data.Length > cartridge.Length)

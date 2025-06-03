@@ -131,7 +131,8 @@ public class Instruction_Tests
         
         cpu.PC = 0x8000;
         memory.Write((ushort)(cpu.PC), 0xA1); // LDA Indirect X opcode
-        
+        memory.Write((ushort)(cpu.PC + 1), zpAddress); // Zero page address
+
         cpu.Clock();
         
         Assert.Equal(defaultTestValue, cpu.A);
@@ -151,7 +152,8 @@ public class Instruction_Tests
         
         cpu.PC = 0x8000;
         memory.Write((ushort)(cpu.PC), 0xB1); // LDA Indirect Y opcode
-        
+        memory.Write((ushort)(cpu.PC + 1), zpAddress); // Zero page address
+
         cpu.Clock();
         
         Assert.Equal(defaultTestValue, cpu.A);

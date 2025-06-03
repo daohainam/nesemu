@@ -28,19 +28,42 @@ internal partial class InstructionSet
         instructions[0xB1] = new Instruction("LDA", AddressingMode.IndirectY, 5, 2, OpLDA);
     }
 
-    private static byte ReadMemory(ushort address, IMemory memory, AddressingMode mode)
+    private static byte ReadMemory(Cpu cpu, IMemory memory, AddressingMode mode)
     {
-        return mode switch
+        switch (mode)
         {
-            AddressingMode.Immediate => memory.Read(address),
-            AddressingMode.ZeroPage => memory.Read(memory.Read(address)),
-            AddressingMode.ZeroPageX => memory.Read((byte)(memory.Read(address) + 1)),
-            AddressingMode.Absolute => memory.Read((ushort)(memory.Read(address) | (ushort)(memory.Read((ushort)(address + 1)) << 8))),
-            AddressingMode.AbsoluteX => memory.Read((ushort)(memory.Read(address) | (ushort)(memory.Read((ushort)(address + 1)) << 8) + 1)), // Assuming X is added to the absolute address
-            _ => throw new InvalidOperationException($"Unsupported addressing mode: {mode}")
-        };
+            case AddressingMode.Immediate:
+                return memory.Read(cpu.PC++);
+            case AddressingMode.ZeroPage:
+                return memory.Read(memory.Read(cpu.PC++));
+            case AddressingMode.ZeroPageX:
+                return memory.Read((byte)(memory.Read(cpu.PC++) + cpu.X));
+            case AddressingMode.Absolute:
+                ushort address = (ushort)(memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8));
+                return memory.Read(address);
+            case AddressingMode.AbsoluteX:
+                address = (ushort)(memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8));
+                return memory.Read((ushort)(address + cpu.X));
+            case AddressingMode.AbsoluteY:
+                address = (ushort)(memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8));
+                return memory.Read((ushort)(address + cpu.Y));
+            case AddressingMode.IndirectX:
+                byte zpAddress = memory.Read(cpu.PC++);
+                ushort indirectAddress = (ushort)(zpAddress + cpu.X);
+                ushort addressLow = memory.Read(indirectAddress);
+                ushort addressHigh = memory.Read((ushort)((indirectAddress + 1) & 0xFF)); // Wrap around for zero page
+                return memory.Read((ushort)(addressHigh << 8 | addressLow));
+            case AddressingMode.IndirectY:
+                zpAddress = memory.Read(cpu.PC++);
+                indirectAddress = (ushort)(zpAddress + cpu.Y);
+                addressLow = memory.Read(indirectAddress);
+                addressHigh = memory.Read((ushort)((indirectAddress + 1) & 0xFF)); // Wrap around for zero page
+                return memory.Read((ushort)(addressHigh << 8 | addressLow));
+            default:
+                Cpu.Panic($"Unsupported addressing mode: {mode}");
+                return 0; // Unreachable, but required to satisfy the compiler
+        }
     }
-
 
     private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,
     (cpu, memory, mode) => Cpu.Panic($"Invalid opcode({index:X4}) at {cpu.PC - 1:X4}."));

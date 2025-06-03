@@ -39,65 +39,49 @@ internal partial class InstructionSet
 
     private static void OpLDAIndirectY(Cpu cpu, IMemory memory)
     {
-        byte zpAddress = ReadMemory(cpu.PC++, memory, AddressingMode.IndirectY);
-        ushort address = (ushort)(zpAddress + cpu.Y);
-        byte value = memory.Read(address);
+        byte value = ReadMemory(cpu, memory, AddressingMode.IndirectY);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
-        cpu.PC++;
     }
 
     private static void OpLDAIndirectX(Cpu cpu, IMemory memory)
     {
-        byte zpAddress = ReadMemory(cpu.PC++, memory, AddressingMode.IndirectX);
-        ushort address = (ushort)(zpAddress + cpu.X);
-        byte value = memory.Read(address);
+        byte value = ReadMemory(cpu, memory, AddressingMode.IndirectX);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
-        cpu.PC++;
     }
 
     private static void OpLDAAbsoluteY(Cpu cpu, IMemory memory)
     {
-        byte zpAddress = ReadMemory(cpu.PC++, memory, AddressingMode.AbsoluteY);
-        ushort address = (ushort)(zpAddress + cpu.Y);
-        byte value = memory.Read(address);
+        byte value = ReadMemory(cpu, memory, AddressingMode.AbsoluteY);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
-        cpu.PC++;
     }
 
     private static void OpLDAAbsoluteX(Cpu cpu, IMemory memory)
     {
-        byte zpAddress = ReadMemory(cpu.PC++, memory, AddressingMode.AbsoluteX);
-        ushort address = (ushort)(zpAddress + cpu.X);
-        byte value = memory.Read(address);
+        byte value = ReadMemory(cpu, memory, AddressingMode.AbsoluteX);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
-        cpu.PC++;
     }
 
     private static void OpLDAZeroPageX(Cpu cpu, IMemory memory)
     {
-        byte zpAddress = ReadMemory(cpu.PC++, memory, AddressingMode.ZeroPageX);
-        ushort address = (ushort)(zpAddress + cpu.X);
-        byte value = memory.Read(address);
+        byte value = ReadMemory(cpu, memory, AddressingMode.ZeroPageX);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
-        cpu.PC++;
     }
 
     private static void OpLDAAbsolute(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu.PC, memory, AddressingMode.Absolute);
-        cpu.PC += 2; // Increment PC by 2 for absolute addressing
+        byte value = ReadMemory(cpu, memory, AddressingMode.Absolute);
         cpu.A = value;
         cpu.SetFlagsByValue(value);
     }
 
     private static void OpLDAZeroPage(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu.PC++, memory, AddressingMode.ZeroPage);
+        byte value = ReadMemory(cpu, memory, AddressingMode.ZeroPage);
 
         cpu.A = value;
         cpu.SetFlagsByValue(value);
@@ -105,7 +89,7 @@ internal partial class InstructionSet
 
     private static void OpLDAImmediate(Cpu cpu, IMemory memory)
     {
-        byte value = ReadMemory(cpu.PC++, memory, AddressingMode.Immediate);
+        byte value = ReadMemory(cpu, memory, AddressingMode.Immediate);
 
         cpu.A = value;
         cpu.SetFlagsByValue(value);
