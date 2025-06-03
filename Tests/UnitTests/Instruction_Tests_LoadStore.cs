@@ -1,5 +1,5 @@
 ﻿namespace UnitTests;
-public partial class Instruction_Tests
+public partial class Instruction_Tests_LoadStore: Instruction_Tests
 {
     [Fact]
     public void LDA_Immediate_Instruction_Test()

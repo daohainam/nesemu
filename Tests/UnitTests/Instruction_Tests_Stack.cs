@@ -1,5 +1,5 @@
 ﻿namespace UnitTests;
-public partial class Instruction_Tests
+public partial class Instruction_Tests_Stack: Instruction_Tests
 {
     [Fact]
     public void PHA_Instruction_Test()

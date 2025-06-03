@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace UnitTests;
-public partial class Instruction_Tests
+public partial class Instruction_Tests_RegisterTransfer: Instruction_Tests
 {
 	[Theory]
 	[InlineData(0x00, false, true)] // Zero value

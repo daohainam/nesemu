@@ -1,7 +1,7 @@
 ﻿using mini_6502;
 
 namespace UnitTests;
-public partial class Instruction_Tests
+public partial class Instruction_Tests_Logical: Instruction_Tests
 {
     [Fact]
     public void AND_Immediate_Instruction_Test()

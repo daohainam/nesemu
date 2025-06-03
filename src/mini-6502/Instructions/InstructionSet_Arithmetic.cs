@@ -56,4 +56,46 @@ internal class InstructionSet_Arithmetic
         cpu.SetZNFlagsByValue((byte)(result & 0xFF));
         cpu.SetFlag(Flags.FLAG_OVERFLOW, ((cpu.Y ^ value) & 0x80) != 0 && ((cpu.Y ^ result) & 0x80) != 0);
     }
+
+    internal static void OpINC(Cpu cpu, IMemory memory, AddressingMode mode)
+    {
+        byte address = InstructionHelpers.ReadMemory(cpu, memory, mode);
+        byte value = (byte)((address + 1) & 0xFF);
+        InstructionHelpers.WriteMemory(cpu, memory, mode, value);
+        
+        cpu.SetZNFlagsByValue(value);
+    }
+
+    internal static void OpDEC(Cpu cpu, IMemory memory, AddressingMode mode)
+    {
+        byte address = InstructionHelpers.ReadMemory(cpu, memory, mode);
+        byte value = (byte)((address - 1) & 0xFF);
+        InstructionHelpers.WriteMemory(cpu, memory, mode, value);
+        
+        cpu.SetZNFlagsByValue(value);
+    }
+
+    internal static void OpINX(Cpu cpu, IMemory memory, AddressingMode mode)
+    {
+        cpu.X = (byte)((cpu.X + 1) & 0xFF);
+        cpu.SetZNFlagsByValue(cpu.X);
+    }
+
+    internal static void OpDEX(Cpu cpu, IMemory memory, AddressingMode mode)
+    {
+        cpu.X = (byte)((cpu.X - 1) & 0xFF);
+        cpu.SetZNFlagsByValue(cpu.X);
+    }
+
+    internal static void OpINY(Cpu cpu, IMemory memory, AddressingMode mode)
+    {
+        cpu.Y = (byte)((cpu.Y + 1) & 0xFF);
+        cpu.SetZNFlagsByValue(cpu.Y);
+    }
+
+    internal static void OpDEY(Cpu cpu, IMemory memory, AddressingMode mode)
+    {
+        cpu.Y = (byte)((cpu.Y - 1) & 0xFF);
+        cpu.SetZNFlagsByValue(cpu.Y);
+    }
 }

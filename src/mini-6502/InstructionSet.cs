@@ -126,6 +126,29 @@ internal partial class InstructionSet
         instructions[0xC4] = new Instruction("CPY", AddressingMode.ZeroPage, 3, 2, InstructionSet_Arithmetic.OpCPY);
         instructions[0xCC] = new Instruction("CPY", AddressingMode.Absolute, 4, 3, InstructionSet_Arithmetic.OpCPY);
 
+        instructions[0xE6] = new Instruction("INC", AddressingMode.ZeroPage, 5, 2, InstructionSet_Arithmetic.OpINC);
+        instructions[0xF6] = new Instruction("INC", AddressingMode.ZeroPageX, 6, 2, InstructionSet_Arithmetic.OpINC);
+        instructions[0xEE] = new Instruction("INC", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpINC);
+        instructions[0xFE] = new Instruction("INC", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpINC);
+        instructions[0xE6] = new Instruction("DEC", AddressingMode.ZeroPage, 5, 2, InstructionSet_Arithmetic.OpDEC);
+        instructions[0xF6] = new Instruction("DEC", AddressingMode.ZeroPageX, 6, 2, InstructionSet_Arithmetic.OpDEC);
+        instructions[0xCE] = new Instruction("DEC", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpDEC);
+        instructions[0xDE] = new Instruction("DEC", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpDEC);
+
+        instructions[0xE8] = new Instruction("INX", AddressingMode.Implied, 2, 2, InstructionSet_Arithmetic.OpINX);
+        instructions[0xC8] = new Instruction("INY", AddressingMode.Implied, 2, 2, InstructionSet_Arithmetic.OpINY);
+        instructions[0xC8] = new Instruction("DEX", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpDEX);
+        instructions[0xC8] = new Instruction("DEY", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpDEY);
+
+
+
+
+
+
+
+
+
+
         for (int i = 0; i < instructions.Length; i++)
         {
             if (instructions[i] is null) 

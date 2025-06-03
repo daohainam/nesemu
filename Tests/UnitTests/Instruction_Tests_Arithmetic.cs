@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 
 namespace UnitTests;
-public partial class Instruction_Tests
+public partial class Instruction_Tests_Arithmetic: Instruction_Tests
 {
     public static readonly IEnumerable<object[]> ArithmeticTestData =
     [
@@ -462,5 +462,153 @@ public partial class Instruction_Tests
         Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
         Assert.Equal(y, cpu.Y);
         Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
+
+    [Fact]
+    public void INC_ZeroPage_Instruction_Test()
+    {
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0xE6);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0020, 0x10);
+        cpu.Clock();
+        Assert.Equal(0x11, memory.Read(0x0020));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Fact]
+    public void INC_ZeroPageX_Instruction_Test()
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        memory.Write(cartridgeAddress, 0xF6);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0025, 0x10);
+        cpu.Clock();
+        Assert.Equal(0x11, memory.Read(0x0025));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Fact]
+    public void INC_Absolute_Instruction_Test()
+    {
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0xEE);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
+        memory.Write(0x0020, 0x10);
+        cpu.Clock();
+        Assert.Equal(0x11, memory.Read(0x0020));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
+
+    [Fact]
+    public void INC_AbsoluteX_Instruction_Test()
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        memory.Write(cartridgeAddress, 0xFE);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
+        memory.Write(0x0025, 0x10);
+        cpu.Clock();
+        Assert.Equal(0x11, memory.Read(0x0025));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
+
+    [Fact]
+    public void DEC_ZeroPage_Instruction_Test()
+    {
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0xC6);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0020, 0x10);
+        cpu.Clock();
+        Assert.Equal(0x0F, memory.Read(0x0020));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Fact]
+    public void DEC_ZeroPageX_Instruction_Test()
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        memory.Write(cartridgeAddress, 0xD6);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0025, 0x10);
+        cpu.Clock();
+        Assert.Equal(0x0F, memory.Read(0x0025));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Fact]
+    public void DEC_Absolute_Instruction_Test()
+    {
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0xCE);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
+        memory.Write(0x0020, 0x10);
+        cpu.Clock();
+        Assert.Equal(0x0F, memory.Read(0x0020));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
+
+    [Fact]
+    public void DEC_AbsoluteX_Instruction_Test()
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        memory.Write(cartridgeAddress, 0xDE);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
+        memory.Write(0x0025, 0x10);
+        cpu.Clock();
+        Assert.Equal(0x0F, memory.Read(0x0025));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
+
+    [Fact]
+    public void INX_Implied_Instruction_Test()
+    {
+        cpu.X = 0x10;
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0xE8);
+        cpu.Clock();
+        Assert.Equal(0x11, cpu.X);
+        Assert.Equal(cartridgeAddress + 1, cpu.PC);
+    }
+
+    [Fact]
+    public void DEX_Implied_Instruction_Test()
+    {
+        cpu.X = 0x10;
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0xCA);
+        cpu.Clock();
+        Assert.Equal(0x0F, cpu.X);
+        Assert.Equal(cartridgeAddress + 1, cpu.PC);
+    }
+
+    [Fact]
+    public void INY_Implied_Instruction_Test()
+    {
+        cpu.Y = 0x10;
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0xC8);
+        cpu.Clock();
+        Assert.Equal(0x11, cpu.Y);
+        Assert.Equal(cartridgeAddress + 1, cpu.PC);
+    }
+
+    [Fact]
+    public void DEY_Implied_Instruction_Test()
+    {
+        cpu.Y = 0x10;
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0x88);
+        cpu.Clock();
+        Assert.Equal(0x0F, cpu.Y);
+        Assert.Equal(cartridgeAddress + 1, cpu.PC);
     }
 }

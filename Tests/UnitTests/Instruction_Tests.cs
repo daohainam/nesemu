@@ -4,12 +4,12 @@ using mini_6502.Components;
 
 public partial class Instruction_Tests
 {
-    private readonly Ppu ppu;
-    private readonly Memory memory;
-    private readonly Cpu cpu;
+    internal readonly Ppu ppu;
+    internal readonly Memory memory;
+    internal readonly Cpu cpu;
 
-    private readonly byte defaultTestValue = 0xCF;
-    private readonly ushort cartridgeAddress = 0x8000;
+    internal readonly byte defaultTestValue = 0xCF;
+    internal readonly ushort cartridgeAddress = 0x8000;
 
     public Instruction_Tests()
     {
