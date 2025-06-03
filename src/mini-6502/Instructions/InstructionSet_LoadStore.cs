@@ -18,7 +18,7 @@ internal class InstructionSet_LoadStore
             case AddressingMode.IndirectY:
                 byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
                 cpu.A = value;
-                cpu.SetFlagsByValue(value);
+                cpu.SetZNFlagsByValue(value);
                 break;
             default:
                 Cpu.Panic($"LDA: Unsupported addressing mode: {mode}");
@@ -37,7 +37,7 @@ internal class InstructionSet_LoadStore
             case AddressingMode.AbsoluteY:
                 byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
                 cpu.X = value;
-                cpu.SetFlagsByValue(value);
+                cpu.SetZNFlagsByValue(value);
                 break;
             default:
                 Cpu.Panic($"LDX: Unsupported addressing mode: {mode}");
@@ -56,7 +56,7 @@ internal class InstructionSet_LoadStore
             case AddressingMode.AbsoluteX:
                 byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
                 cpu.Y = value;
-                cpu.SetFlagsByValue(value);
+                cpu.SetZNFlagsByValue(value);
                 break;
             default:
                 Cpu.Panic($"LDY: Unsupported addressing mode: {mode}");

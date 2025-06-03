@@ -32,7 +32,7 @@ internal class InstructionSet_Logical
         byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
         cpu.SetFlag(Flags.FLAG_ZERO, (cpu.A & value) == 0);
         cpu.SetFlag(Flags.FLAG_NEGATIVE, (value & 0x80) != 0);
-        cpu.SetFlag(Flags.FLAG_VOVERFLOW, (value & 0x40) != 0);
+        cpu.SetFlag(Flags.FLAG_OVERFLOW, (value & 0x40) != 0);
     }
 
 

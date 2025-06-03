@@ -99,9 +99,37 @@ internal partial class InstructionSet
         instructions[0x24] = new Instruction("BIT", AddressingMode.ZeroPage, 3, 2, InstructionSet_Logical.OpBIT);
         instructions[0x2C] = new Instruction("BIT", AddressingMode.Absolute, 4, 3, InstructionSet_Logical.OpBIT);
 
-
-
-
+        // Arithmetic Instructions
+        instructions[0x69] = new Instruction("ADC", AddressingMode.Immediate, 2, 2, InstructionSet_Arithmetic.OpADC);
+        instructions[0x65] = new Instruction("ADC", AddressingMode.ZeroPage, 3, 2, InstructionSet_Arithmetic.OpADC);
+        instructions[0x75] = new Instruction("ADC", AddressingMode.ZeroPageX, 4, 2, InstructionSet_Arithmetic.OpADC);
+        instructions[0x6D] = new Instruction("ADC", AddressingMode.Absolute, 4, 3, InstructionSet_Arithmetic.OpADC);
+        instructions[0x7D] = new Instruction("ADC", AddressingMode.AbsoluteX, 4, 3, InstructionSet_Arithmetic.OpADC);
+        instructions[0x79] = new Instruction("ADC", AddressingMode.AbsoluteY, 4, 3, InstructionSet_Arithmetic.OpADC);
+        instructions[0x61] = new Instruction("ADC", AddressingMode.IndirectX, 6, 2, InstructionSet_Arithmetic.OpADC);
+        instructions[0x71] = new Instruction("ADC", AddressingMode.IndirectY, 5, 2, InstructionSet_Arithmetic.OpADC);
+        instructions[0xE9] = new Instruction("SBC", AddressingMode.Immediate, 2, 2, InstructionSet_Arithmetic.OpSBC);
+        instructions[0xE5] = new Instruction("SBC", AddressingMode.ZeroPage, 3, 2, InstructionSet_Arithmetic.OpSBC);
+        instructions[0xF5] = new Instruction("SBC", AddressingMode.ZeroPageX, 4, 2, InstructionSet_Arithmetic.OpSBC);
+        instructions[0xED] = new Instruction("SBC", AddressingMode.Absolute, 4, 3, InstructionSet_Arithmetic.OpSBC);
+        instructions[0xFD] = new Instruction("SBC", AddressingMode.AbsoluteX, 4, 3, InstructionSet_Arithmetic.OpSBC);
+        instructions[0xF9] = new Instruction("SBC", AddressingMode.AbsoluteY, 4, 3, InstructionSet_Arithmetic.OpSBC);
+        instructions[0xE1] = new Instruction("SBC", AddressingMode.IndirectX, 6, 2, InstructionSet_Arithmetic.OpSBC);
+        instructions[0xF1] = new Instruction("SBC", AddressingMode.IndirectY, 5, 2, InstructionSet_Arithmetic.OpSBC);
+        instructions[0xC9] = new Instruction("CMP", AddressingMode.Immediate, 2, 2, InstructionSet_Arithmetic.OpCMP);
+        instructions[0xC5] = new Instruction("CMP", AddressingMode.ZeroPage, 3, 2, InstructionSet_Arithmetic.OpCMP);
+        instructions[0xD5] = new Instruction("CMP", AddressingMode.ZeroPageX, 4, 2, InstructionSet_Arithmetic.OpCMP);
+        instructions[0xCD] = new Instruction("CMP", AddressingMode.Absolute, 4, 3, InstructionSet_Arithmetic.OpCMP);
+        instructions[0xDD] = new Instruction("CMP", AddressingMode.AbsoluteX, 4, 3, InstructionSet_Arithmetic.OpCMP);
+        instructions[0xD9] = new Instruction("CMP", AddressingMode.AbsoluteY, 4, 3, InstructionSet_Arithmetic.OpCMP);
+        instructions[0xC1] = new Instruction("CMP", AddressingMode.IndirectX, 6, 2, InstructionSet_Arithmetic.OpCMP);
+        instructions[0xD1] = new Instruction("CMP", AddressingMode.IndirectY, 5, 2, InstructionSet_Arithmetic.OpCMP);
+        instructions[0xE0] = new Instruction("CPX", AddressingMode.Immediate, 2, 2, InstructionSet_Arithmetic.OpCPX);
+        instructions[0xE4] = new Instruction("CPX", AddressingMode.ZeroPage, 3, 2, InstructionSet_Arithmetic.OpCPX);
+        instructions[0xEC] = new Instruction("CPX", AddressingMode.Absolute, 4, 3, InstructionSet_Arithmetic.OpCPX);
+        instructions[0xC0] = new Instruction("CPY", AddressingMode.Immediate, 2, 2, InstructionSet_Arithmetic.OpCPY);
+        instructions[0xC4] = new Instruction("CPY", AddressingMode.ZeroPage, 3, 2, InstructionSet_Arithmetic.OpCPY);
+        instructions[0xCC] = new Instruction("CPY", AddressingMode.Absolute, 4, 3, InstructionSet_Arithmetic.OpCPY);
     }
 
     private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,

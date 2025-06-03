@@ -174,7 +174,7 @@ public partial class Instruction_Tests
         
         Assert.Equal((value & 0xC3) == 0 ? Flags.FLAG_ZERO : (byte)0, cpu.P & Flags.FLAG_ZERO);
         Assert.Equal((0xC3 & 0x80) != 0 ? Flags.FLAG_NEGATIVE : (byte)0, cpu.P & Flags.FLAG_NEGATIVE);
-        Assert.Equal((0xC3 & 0x40) != 0 ? Flags.FLAG_VOVERFLOW : (byte)0, cpu.P & Flags.FLAG_VOVERFLOW);
+        Assert.Equal((0xC3 & 0x40) != 0 ? Flags.FLAG_OVERFLOW : (byte)0, cpu.P & Flags.FLAG_OVERFLOW);
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 
@@ -193,7 +193,7 @@ public partial class Instruction_Tests
         
         Assert.Equal((value & 0xC3) == 0 ? Flags.FLAG_ZERO : (byte)0, cpu.P & Flags.FLAG_ZERO);
         Assert.Equal((0xC3 & 0x80) != 0 ? Flags.FLAG_NEGATIVE : (byte)0, cpu.P & Flags.FLAG_NEGATIVE);
-        Assert.Equal((0xC3 & 0x40) != 0 ? Flags.FLAG_VOVERFLOW : (byte)0, cpu.P & Flags.FLAG_VOVERFLOW);
+        Assert.Equal((0xC3 & 0x40) != 0 ? Flags.FLAG_OVERFLOW : (byte)0, cpu.P & Flags.FLAG_OVERFLOW);
         Assert.Equal(cartridgeAddress + 3, cpu.PC);
     }
 

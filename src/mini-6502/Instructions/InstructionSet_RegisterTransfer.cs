@@ -6,30 +6,30 @@ internal class InstructionSet_RegisterTransfer
     internal static void OpTAX(Cpu cpu, IMemory memory, AddressingMode mode)
     {
         cpu.X = cpu.A;
-        cpu.SetFlagsByValue(cpu.X);
+        cpu.SetZNFlagsByValue(cpu.X);
     }
 
     internal static void OpTAY(Cpu cpu, IMemory memory, AddressingMode mode)
     {
         cpu.Y = cpu.A;
-        cpu.SetFlagsByValue(cpu.Y);
+        cpu.SetZNFlagsByValue(cpu.Y);
     }
 
     internal static void OpTXA(Cpu cpu, IMemory memory, AddressingMode mode)
     {
         cpu.A = cpu.X;
-        cpu.SetFlagsByValue(cpu.A);
+        cpu.SetZNFlagsByValue(cpu.A);
     }
 
     internal static void OpTYA(Cpu cpu, IMemory memory, AddressingMode mode)
     {
         cpu.A = cpu.Y;
-        cpu.SetFlagsByValue(cpu.A);
+        cpu.SetZNFlagsByValue(cpu.A);
     }
     internal static void OpTSX(Cpu cpu, IMemory memory, AddressingMode mode)
     {
         cpu.X = cpu.SP;
-        cpu.SetFlagsByValue(cpu.X);
+        cpu.SetZNFlagsByValue(cpu.X);
     }
     internal static void OpTXS(Cpu cpu, IMemory memory, AddressingMode mode)
     {
