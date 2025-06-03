@@ -155,7 +155,7 @@ public partial class Instruction_Tests
         memory.Write((ushort)(cartridgeAddress + 1), 0x20);
         memory.Write(0x0020, 0x20);
         cpu.Clock();
-        Assert.Equal(0xF0, cpu.A);
+        Assert.Equal(0xEF, cpu.A);
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 
@@ -169,7 +169,7 @@ public partial class Instruction_Tests
         memory.Write((ushort)(cartridgeAddress + 1), 0x20);
         memory.Write(0x0025, 0x20);
         cpu.Clock();
-        Assert.Equal(0xF0, cpu.A);
+        Assert.Equal(0xEF, cpu.A);
     }
 
     [Fact]
@@ -221,10 +221,15 @@ public partial class Instruction_Tests
     {
         cpu.A = 0x10;
         cpu.X = 0x05;
+        byte zpAddress = 0x20;
+        ushort effectiveZpAddress = (ushort)(zpAddress + cpu.X);
+        ushort indirectAddress = 0x1234;
+        memory.Write(effectiveZpAddress, (byte)(indirectAddress & 0xFF));
+        memory.Write((ushort)(effectiveZpAddress + 1), (byte)(indirectAddress >> 8));
+        memory.Write(indirectAddress, 0x20);
         cpu.PC = cartridgeAddress;
-        memory.Write(cartridgeAddress, 0xE1); // Opcode for SBC Indirect X
-        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
-        memory.Write(0x0025, 0x20);
+        memory.Write((ushort)(cpu.PC), 0xE1); // Opcode for SBC Indirect X
+        memory.Write((ushort)(cpu.PC + 1), zpAddress);
         cpu.Clock();
         Assert.Equal(0xEF, cpu.A);
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
