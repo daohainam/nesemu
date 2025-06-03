@@ -175,14 +175,14 @@ public partial class Instruction_Tests
     [Fact]
     public void SBC_Absolute_Instruction_Test()
     {
-        cpu.A = 0x10;
+        cpu.A = 0x5F;
         cpu.PC = cartridgeAddress;
         memory.Write(cartridgeAddress, 0xED); // Opcode for SBC Absolute
         memory.Write((ushort)(cartridgeAddress + 1), 0x34);
         memory.Write((ushort)(cartridgeAddress + 2), 0x12);
         memory.Write(0x1234, 0x20);
         cpu.Clock();
-        Assert.Equal(0xF0, cpu.A);
+        Assert.Equal(0x3E, cpu.A);
         Assert.Equal(cartridgeAddress + 3, cpu.PC);
     }
 
@@ -197,7 +197,7 @@ public partial class Instruction_Tests
         memory.Write((ushort)(cartridgeAddress + 2), 0x00);
         memory.Write(0x0025, 0x20);
         cpu.Clock();
-        Assert.Equal(0xF0, cpu.A);
+        Assert.Equal(0xEF, cpu.A);
         Assert.Equal(cartridgeAddress + 3, cpu.PC);
     }
 
@@ -212,7 +212,7 @@ public partial class Instruction_Tests
         memory.Write((ushort)(cartridgeAddress + 2), 0x00);
         memory.Write(0x0025, 0x20);
         cpu.Clock();
-        Assert.Equal(0xF0, cpu.A);
+        Assert.Equal(0xEF, cpu.A);
         Assert.Equal(cartridgeAddress + 3, cpu.PC);
     }
 
@@ -226,7 +226,7 @@ public partial class Instruction_Tests
         memory.Write((ushort)(cartridgeAddress + 1), 0x20);
         memory.Write(0x0025, 0x20);
         cpu.Clock();
-        Assert.Equal(0xF0, cpu.A);
+        Assert.Equal(0xEF, cpu.A);
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 
@@ -241,7 +241,7 @@ public partial class Instruction_Tests
         memory.Write(0x0020, 0x20);
         memory.Write(0x0025, 0x20);
         cpu.Clock();
-        Assert.Equal(0xF0, cpu.A);
+        Assert.Equal(0xEF, cpu.A);
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 

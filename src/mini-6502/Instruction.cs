@@ -10,4 +10,9 @@ internal class Instruction(string mnemonic, AddressingMode mode, int cycles, int
     public int Cycles => cycles;
     public int NumberOfBytes => numberOfBytes;
     public Action<Cpu, IMemory, AddressingMode> Execute => execute;
+
+    public override string ToString()
+    {
+        return $"{Mnemonic} ({Mode}) - {Cycles} cycles, {NumberOfBytes} bytes";
+    }
 }

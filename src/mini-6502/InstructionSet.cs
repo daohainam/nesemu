@@ -13,11 +13,6 @@ internal partial class InstructionSet
 
     private static void InitInstructions()
     {
-        for (int i = 0; i < instructions.Length; i++)
-        {
-            instructions[i] = new InvalidOpcodeInstruction(i);
-        }
-
         // Load Instructions
         instructions[0xA9] = new Instruction("LDA", AddressingMode.Immediate, 2, 2, InstructionSet_LoadStore.OpLDA);
         instructions[0xA5] = new Instruction("LDA", AddressingMode.ZeroPage, 3, 2, InstructionSet_LoadStore.OpLDA);
@@ -130,6 +125,13 @@ internal partial class InstructionSet
         instructions[0xC0] = new Instruction("CPY", AddressingMode.Immediate, 2, 2, InstructionSet_Arithmetic.OpCPY);
         instructions[0xC4] = new Instruction("CPY", AddressingMode.ZeroPage, 3, 2, InstructionSet_Arithmetic.OpCPY);
         instructions[0xCC] = new Instruction("CPY", AddressingMode.Absolute, 4, 3, InstructionSet_Arithmetic.OpCPY);
+
+        for (int i = 0; i < instructions.Length; i++)
+        {
+            if (instructions[i] is null) 
+                instructions[i] = new InvalidOpcodeInstruction(i);
+        }
+
     }
 
     private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,
