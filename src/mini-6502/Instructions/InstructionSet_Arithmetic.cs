@@ -59,19 +59,19 @@ internal class InstructionSet_Arithmetic
 
     internal static void OpINC(Cpu cpu, IMemory memory, AddressingMode mode)
     {
-        byte address = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        byte value = (byte)((address + 1) & 0xFF);
-        InstructionHelpers.WriteMemory(cpu, memory, mode, value);
-        
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode, out var address);
+        value = (byte)((value + 1) & 0xFF);
+        memory.Write(address, value);
+
         cpu.SetZNFlagsByValue(value);
     }
 
     internal static void OpDEC(Cpu cpu, IMemory memory, AddressingMode mode)
     {
-        byte address = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        byte value = (byte)((address - 1) & 0xFF);
-        InstructionHelpers.WriteMemory(cpu, memory, mode, value);
-        
+        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode, out var address);
+        value = (byte)((value - 1) & 0xFF);
+        memory.Write(address, value);
+
         cpu.SetZNFlagsByValue(value);
     }
 

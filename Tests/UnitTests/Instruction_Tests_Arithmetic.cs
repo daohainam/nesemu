@@ -497,12 +497,15 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     {
         cpu.PC = cartridgeAddress;
         memory.Write(cartridgeAddress, 0xEE);
-        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
-        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
-        memory.Write(0x0020, 0x10);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x34);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x12);
+        memory.Write(0x1234, 0x10);
         cpu.Clock();
-        Assert.Equal(0x11, memory.Read(0x0020));
+        Assert.Equal(0x11, memory.Read(0x1234));
         Assert.Equal(cartridgeAddress + 3, cpu.PC);
+        Assert.False(cpu.GetFlag(Flags.FLAG_ZERO)); 
+        Assert.False(cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.False(cpu.GetFlag(Flags.FLAG_CARRY)); 
     }
 
     [Fact]
@@ -511,11 +514,11 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
         cpu.PC = cartridgeAddress;
         cpu.X = 0x05;
         memory.Write(cartridgeAddress, 0xFE);
-        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
-        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
-        memory.Write(0x0025, 0x10);
+        memory.Write((ushort)(cartridgeAddress + 1), 0x34);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x12);
+        memory.Write(0x1239, 0x10);
         cpu.Clock();
-        Assert.Equal(0x11, memory.Read(0x0025));
+        Assert.Equal(0x11, memory.Read(0x1239));
         Assert.Equal(cartridgeAddress + 3, cpu.PC);
     }
 
