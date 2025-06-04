@@ -164,6 +164,18 @@ internal partial class InstructionSet
         instructions[0x6E] = new Instruction("ROR", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpROR);
         instructions[0x7E] = new Instruction("ROR", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpROR);
 
+        // Branching Instructions
+        instructions[0x90] = new Instruction("BCC", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBCC);
+        instructions[0xB0] = new Instruction("BCS", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBCS);
+        instructions[0xF0] = new Instruction("BEQ", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBEQ);
+        instructions[0xD0] = new Instruction("BNE", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBNE);
+        instructions[0x10] = new Instruction("BPL", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBPL);
+        instructions[0x30] = new Instruction("BMI", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBMI);
+        instructions[0x50] = new Instruction("BVC", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBVC);
+        instructions[0x70] = new Instruction("BVS", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBVS);
+
+
+
         for (int i = 0; i < instructions.Length; i++)
         {
             if (instructions[i] is null) 
