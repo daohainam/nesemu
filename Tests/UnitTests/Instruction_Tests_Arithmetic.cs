@@ -4,16 +4,6 @@ using Newtonsoft.Json.Linq;
 namespace UnitTests;
 public partial class Instruction_Tests_Arithmetic: Instruction_Tests
 {
-    public static readonly TheoryData<byte, byte, bool, bool, bool> CompareTestData = new()
-    {
-        { 0x00, 0x00, true, true, false }, // Zero Page
-        { 0x10, 0x10, true, true, false }, // Zero Page X
-        { 0x20, 0x10, false, true, false }, // Absolute
-        { 0xFF, 0x01, false, true, true }, // Absolute X
-        { 0x80, 0x7F, false, true, false }, // Absolute Y
-        { 0x7F, 0x80, false, false, true }  // Indirect X
-    };
-
     [Fact]
     public void ADC_Immediate_Instruction_Test()
     {
@@ -365,8 +355,18 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 
+    public static readonly TheoryData<byte, byte, bool, bool, bool> CPX_CPY_TestData = new()
+    {
+        { 0x00, 0x00, true, true, false }, 
+        { 0x10, 0x10, true, true, false }, 
+        { 0x20, 0x10, false, true, false },
+        { 0xFF, 0x01, false, true, true }, 
+        { 0x80, 0x7F, false, true, false },
+        { 0x7F, 0x80, false, false, true } 
+    };
+
     [Theory]
-    [MemberData(nameof(CompareTestData))]
+    [MemberData(nameof(CPX_CPY_TestData))]
     public void CPX_Immediate_Instruction_Test(byte x, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.X = x;
@@ -382,7 +382,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(CompareTestData))]
+    [MemberData(nameof(CPX_CPY_TestData))]
     public void CPX_ZeroPage_Instruction_Test(byte x, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.X = x;
@@ -399,7 +399,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(CompareTestData))]
+    [MemberData(nameof(CPX_CPY_TestData))]
     public void CPX_Absolute_Instruction_Test(byte x, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.X = x;
@@ -417,7 +417,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(CompareTestData))]
+    [MemberData(nameof(CPX_CPY_TestData))]
     public void CPY_Immediate_Instruction_Test(byte y, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.Y = y;
@@ -433,7 +433,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(CompareTestData))]
+    [MemberData(nameof(CPX_CPY_TestData))]
     public void CPY_ZeroPage_Instruction_Test(byte y, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.Y = y;
@@ -450,7 +450,7 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     }
 
     [Theory]
-    [MemberData(nameof(CompareTestData))]
+    [MemberData(nameof(CPX_CPY_TestData))]
     public void CPY_Absolute_Instruction_Test(byte y, byte value, bool isZero, bool isCarry, bool isNegative)
     {
         cpu.Y = y;
@@ -616,5 +616,188 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
         cpu.Clock();
         Assert.Equal(0x0F, cpu.Y);
         Assert.Equal(cartridgeAddress + 1, cpu.PC);
+    }
+
+    public static readonly TheoryData<byte, byte, bool, bool, bool> ASL_TestData = new()
+    {
+        { 0x00, 0x00, true, false, false }, // Zero case
+        { 0x01, 0x02, false, false, false }, // No carry, not zero
+        { 0x7F, 0xFE, false, true, false }, // No carry, negative set
+        { 0x80, 0x00, true, false, true } // Carry set
+    };
+
+    [Theory]
+    [MemberData(nameof(ASL_TestData))]
+    public void ASL_Accumulator_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.A = initialValue;
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0x0A); // Opcode for ASL Accumulator
+        cpu.Clock();
+        Assert.Equal(expectedValue, cpu.A);
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 1, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(ASL_TestData))]
+    public void ASL_ZeroPage_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0x06); // Opcode for ASL Zero Page
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0020, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0020));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(ASL_TestData))]
+    public void ASL_ZeroPageX_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        memory.Write(cartridgeAddress, 0x16); // Opcode for ASL Zero Page X
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0025, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0025));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(ASL_TestData))]
+    public void ASL_Absolute_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0x0E); // Opcode for ASL Absolute
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
+        memory.Write(0x0020, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0020));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(ASL_TestData))]
+    public void ASL_AbsoluteX_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        memory.Write(cartridgeAddress, 0x1E); // Opcode for ASL Absolute X
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
+        memory.Write(0x0025, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0025));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
+
+    public static readonly TheoryData<byte, byte, bool, bool, bool> LSR_TestData = new()
+    {
+        { 0x00, 0x00, true, false, false }, 
+        { 0x01, 0x00, true, false, true },
+        { 0x02, 0x01, false, false, false },
+        { 0x80, 0x40, false, false, false }, 
+        { 0xFF, 0x7F, false, false, true } 
+    };
+
+    [Theory]
+    [MemberData(nameof(LSR_TestData))]
+    public void LSR_Accumulator_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.A = initialValue;
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0x4A); // Opcode for LSR Accumulator
+        cpu.Clock();
+        Assert.Equal(expectedValue, cpu.A);
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 1, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(LSR_TestData))]
+    public void LSR_ZeroPage_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0x46); // Opcode for LSR Zero Page
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0020, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0020));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(LSR_TestData))]
+    public void LSR_ZeroPageX_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        memory.Write(cartridgeAddress, 0x56); // Opcode for LSR Zero Page X
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0025, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0025));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(LSR_TestData))]
+    public void LSR_Absolute_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        memory.Write(cartridgeAddress, 0x4E); // Opcode for LSR Absolute
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
+        memory.Write(0x0020, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0020));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(LSR_TestData))]
+    public void LSR_AbsoluteX_Instruction_Test(byte initialValue, byte expectedValue, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        memory.Write(cartridgeAddress, 0x5E); // Opcode for LSR Absolute X
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x00);
+        memory.Write(0x0025, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0025));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
     }
 }

@@ -140,14 +140,17 @@ internal partial class InstructionSet
         instructions[0xCA] = new Instruction("DEX", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpDEX);
         instructions[0x88] = new Instruction("DEY", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpDEY);
 
+        instructions[0x0A] = new Instruction("ASL", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpASL);
+        instructions[0x06] = new Instruction("ASL", AddressingMode.ZeroPage, 5, 2, InstructionSet_Arithmetic.OpASL);
+        instructions[0x16] = new Instruction("ASL", AddressingMode.ZeroPageX, 6, 2, InstructionSet_Arithmetic.OpASL);
+        instructions[0x0E] = new Instruction("ASL", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpASL);
+        instructions[0x1E] = new Instruction("ASL", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpASL);
 
-
-
-
-
-
-
-
+        instructions[0x4A] = new Instruction("LSR", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpLSR);
+        instructions[0x46] = new Instruction("LSR", AddressingMode.ZeroPage, 5, 2, InstructionSet_Arithmetic.OpLSR);
+        instructions[0x56] = new Instruction("LSR", AddressingMode.ZeroPageX, 6, 2, InstructionSet_Arithmetic.OpLSR);
+        instructions[0x4E] = new Instruction("LSR", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpLSR);
+        instructions[0x5E] = new Instruction("LSR", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpLSR);
 
         for (int i = 0; i < instructions.Length; i++)
         {
