@@ -174,6 +174,21 @@ internal partial class InstructionSet
         instructions[0x50] = new Instruction("BVC", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBVC);
         instructions[0x70] = new Instruction("BVS", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBVS);
 
+        // Status Flag Instructions
+        instructions[0x18] = new Instruction("CLC", AddressingMode.Implied, 2, 1, InstructionSet_StatusFlag.OpCLC);
+        instructions[0x38] = new Instruction("SEC", AddressingMode.Implied, 2, 1, InstructionSet_StatusFlag.OpSEC);
+        instructions[0x58] = new Instruction("CLI", AddressingMode.Implied, 2, 1, InstructionSet_StatusFlag.OpCLI);
+        instructions[0x78] = new Instruction("SEI", AddressingMode.Implied, 2, 1, InstructionSet_StatusFlag.OpSEI);
+        instructions[0xB8] = new Instruction("CLV", AddressingMode.Implied, 2, 1, InstructionSet_StatusFlag.OpCLV);
+        instructions[0xD8] = new Instruction("CLD", AddressingMode.Implied, 2, 1, InstructionSet_StatusFlag.OpCLD);
+        instructions[0xF8] = new Instruction("SED", AddressingMode.Implied, 2, 1, InstructionSet_StatusFlag.OpSED);
+
+        // System Instructions
+        instructions[0x00] = new Instruction("BRK", AddressingMode.Implied, 7, 1, InstructionSet_System.OpBRK);
+        instructions[0x40] = new Instruction("RTI", AddressingMode.Implied, 6, 1, InstructionSet_System.OpRTI);
+
+        // No Operation (NOP) Instructions
+        instructions[0xEA] = new Instruction("RTS", AddressingMode.Implied, 1, 1, InstructionSet_System.OpNOP);
 
 
         for (int i = 0; i < instructions.Length; i++)
