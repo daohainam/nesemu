@@ -101,7 +101,7 @@ internal class InstructionSet_Arithmetic
 
     internal static void OpASL(Cpu cpu, IMemory memory, AddressingMode mode)
     {
-        if (mode == AddressingMode.Implied) // some documentations treat ASL as Implied mode
+        if (mode == AddressingMode.Accumulator) // some documentations treat ASL as Implied mode
         {
             cpu.SetFlag(Flags.FLAG_CARRY, (cpu.A & 0x80) != 0);
             cpu.A = (byte)((cpu.A << 1) & 0xFF);
@@ -120,7 +120,7 @@ internal class InstructionSet_Arithmetic
 
     internal static void OpLSR(Cpu cpu, IMemory memory, AddressingMode mode)
     {
-        if (mode == AddressingMode.Implied) // some documentations treat ASL as Implied mode
+        if (mode == AddressingMode.Accumulator) // some documentations treat ASL as Implied mode
         {
             cpu.SetFlag(Flags.FLAG_CARRY, (cpu.A & 0x01) != 0);
             cpu.A = (byte)(cpu.A >> 1);
