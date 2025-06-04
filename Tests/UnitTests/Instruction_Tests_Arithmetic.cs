@@ -800,4 +800,103 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
         Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
         Assert.Equal(cartridgeAddress + 3, cpu.PC);
     }
+
+    public static readonly TheoryData<byte, byte, bool, bool, bool, bool> ROL_TestData = new()
+    {
+        { 0x00, 0x00, false, true, false, false }, 
+        { 0x01, 0x02, false, false, false, false },
+        { 0x7F, 0xFE, false, false, true, false },
+        { 0x80, 0x00, false, true, false, true },
+        { 0xFF, 0xFF, true, false, true, true },
+        { 0xEF, 0xDE, false, false, true, true },
+        { 0x80, 0x01, true, false, false, true }
+    };
+
+    [Theory]
+    [MemberData(nameof(ROL_TestData))]
+    public void ROL_Accumulator_Instruction_Test(byte initialValue, byte expectedValue, bool oldCarryFlag, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.A = initialValue;
+        cpu.PC = cartridgeAddress;
+        cpu.SetFlag(Flags.FLAG_CARRY, oldCarryFlag);
+        memory.Write(cartridgeAddress, 0x2A); // Opcode for ROL Accumulator
+        cpu.Clock();
+        Assert.Equal(expectedValue, cpu.A);
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 1, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(ROL_TestData))]
+    public void ROL_ZeroPage_Instruction_Test(byte initialValue, byte expectedValue, bool oldCarryFlag, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.SetFlag(Flags.FLAG_CARRY, oldCarryFlag);
+        memory.Write(cartridgeAddress, 0x26); // Opcode for ROL Zero Page
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0020, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0020));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(ROL_TestData))]
+    public void ROL_ZeroPageX_Instruction_Test(byte initialValue, byte expectedValue, bool oldCarryFlag, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        cpu.SetFlag(Flags.FLAG_CARRY, oldCarryFlag);
+        memory.Write(cartridgeAddress, 0x36); // Opcode for ROL Zero Page X
+        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+        memory.Write(0x0025, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x0025));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 2, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(ROL_TestData))]
+    public void ROL_Absolute_Instruction_Test(byte initialValue, byte expectedValue, bool oldCarryFlag, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.SetFlag(Flags.FLAG_CARRY, oldCarryFlag);
+        memory.Write(cartridgeAddress, 0x2E); // Opcode for ROL Absolute
+        memory.Write((ushort)(cartridgeAddress + 1), 0x34);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x12);
+        memory.Write(0x1234, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x1234));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
+
+    [Theory]
+    [MemberData(nameof(ROL_TestData))]
+    public void ROL_AbsoluteX_Instruction_Test(byte initialValue, byte expectedValue, bool oldCarryFlag, bool isZero, bool isNegative, bool isCarry)
+    {
+        cpu.PC = cartridgeAddress;
+        cpu.X = 0x05;
+        cpu.SetFlag(Flags.FLAG_CARRY, oldCarryFlag);
+        memory.Write(cartridgeAddress, 0x3E); // Opcode for ROL Absolute X
+        memory.Write((ushort)(cartridgeAddress + 1), 0x34);
+        memory.Write((ushort)(cartridgeAddress + 2), 0x12);
+        memory.Write(0x1239, initialValue);
+        cpu.Clock();
+        Assert.Equal(expectedValue, memory.Read(0x1239));
+        Assert.Equal(isZero, cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.Equal(isNegative, cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.Equal(isCarry, cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.Equal(cartridgeAddress + 3, cpu.PC);
+    }
 }

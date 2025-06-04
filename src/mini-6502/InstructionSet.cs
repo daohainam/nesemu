@@ -152,6 +152,18 @@ internal partial class InstructionSet
         instructions[0x4E] = new Instruction("LSR", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpLSR);
         instructions[0x5E] = new Instruction("LSR", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpLSR);
 
+        instructions[0x2A] = new Instruction("ROL", AddressingMode.Accumulator, 2, 1, InstructionSet_Arithmetic.OpROL);
+        instructions[0x26] = new Instruction("ROL", AddressingMode.ZeroPage, 5, 2, InstructionSet_Arithmetic.OpROL);
+        instructions[0x36] = new Instruction("ROL", AddressingMode.ZeroPageX, 6, 2, InstructionSet_Arithmetic.OpROL);
+        instructions[0x2E] = new Instruction("ROL", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpROL);
+        instructions[0x3E] = new Instruction("ROL", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpROL);
+
+        instructions[0x6A] = new Instruction("ROR", AddressingMode.Accumulator, 2, 1, InstructionSet_Arithmetic.OpROR);
+        instructions[0x66] = new Instruction("ROR", AddressingMode.ZeroPage, 5, 2, InstructionSet_Arithmetic.OpROR);
+        instructions[0x76] = new Instruction("ROR", AddressingMode.ZeroPageX, 6, 2, InstructionSet_Arithmetic.OpROR);
+        instructions[0x6E] = new Instruction("ROR", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpROR);
+        instructions[0x7E] = new Instruction("ROR", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpROR);
+
         for (int i = 0; i < instructions.Length; i++)
         {
             if (instructions[i] is null) 
