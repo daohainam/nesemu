@@ -1,1 +1,1 @@
-# mini-6502
+# NES emulator
