@@ -16,7 +16,7 @@ else
     return;
 }
 
-nes.LoadRom(romData);
+nes.LoadCartridge(romData);
 
 var cancellationTokenSource = new CancellationTokenSource();
 var cancellationToken = new CancellationTokenSource();

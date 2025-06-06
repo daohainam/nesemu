@@ -7,7 +7,7 @@ namespace mini_6502;
 public class Nes
 {
     private int clockFrequency = 1789773; // Default clock frequency
-    private int milliSecondsPerClock = 1000000 / 1789773; // Convert clock frequency to nanoseconds per clock cycle
+    private int milliSecondsPerClock = 1000000 / 1789773; // Convert clock frequency to milliseconds per clock cycle
 
     public int ClockFrequency
     {
@@ -42,7 +42,7 @@ public class Nes
         cpu.Clock();
     }
 
-    public void LoadRom(byte[] romData)
+    public void LoadCartridge(byte[] romData)
     {
         if (romData.Length < 0x8000)
             throw new ArgumentException("ROM data must be at least 32KB long.");
