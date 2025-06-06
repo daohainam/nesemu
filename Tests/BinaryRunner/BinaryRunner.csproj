@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\mini-6502\mini-6502.csproj" />
+    <ProjectReference Include="..\..\src\nes-computer\nes-computer.csproj" />
     <ProjectReference Include="..\..\src\rom-loader\rom-loader.csproj" />
   </ItemGroup>
 
