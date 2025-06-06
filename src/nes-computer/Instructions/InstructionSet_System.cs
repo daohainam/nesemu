@@ -7,10 +7,10 @@ internal class InstructionSet_System
     {
         cpu.SetFlag(Flags.FLAG_BREAK, true);
         cpu.PC++;
-        memory.Write((ushort)(0x0100 + cpu.SP--), (byte)(cpu.PC >> 8)); // Push PC high byte
+        memory.Write((ushort)(0x0100 + cpu.SP--), (byte)((cpu.PC >> 8) & 0xFF)); // Push PC high byte
         memory.Write((ushort)(0x0100 + cpu.SP--), (byte)(cpu.PC & 0xFF)); // Push PC low byte
         memory.Write((ushort)(0x0100 + cpu.SP--), cpu.P); // Push processor status
-        cpu.SetFlag(Flags.FLAG_INTERRUPT, true); // Set interrupt flag
+
         cpu.PC = (ushort)(memory.Read(0xFFFE) | (memory.Read(0xFFFF) << 8)); // Jump to interrupt vector
     }
     internal static void OpRTI(Cpu cpu, IMemory memory, AddressingMode mode)
