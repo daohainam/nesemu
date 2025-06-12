@@ -1,4 +1,6 @@
-﻿namespace rom_loader;
+﻿using rom;
+
+namespace rom_loader;
 public interface IRomLoader
 {
     NesRom LoadRom(byte[] romData);

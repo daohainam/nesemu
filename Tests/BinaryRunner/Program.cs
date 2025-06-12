@@ -1,7 +1,7 @@
 ﻿using mini_6502;
 using System.IO;
 
-var nes = new Nes();
+var nes = new NES();
 
 // Read ROM data from file
 var romPath = @"roms\registers.nes";

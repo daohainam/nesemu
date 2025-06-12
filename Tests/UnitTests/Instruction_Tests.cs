@@ -1,5 +1,6 @@
 ﻿namespace UnitTests;
 
+using mini_6502;
 using mini_6502.Components;
 
 public partial class Instruction_Tests
@@ -14,7 +15,7 @@ public partial class Instruction_Tests
     public Instruction_Tests()
     {
         ppu = new Ppu();
-        memory = new Memory(ppu);
+        memory = new Memory(MapperFactory.CreateMapper0(), ppu);
         cpu = new Cpu(memory);
 
         cpu.Reset(); // Reset CPU to initial state before each test

@@ -1,77 +1,35 @@
 ﻿namespace mini_6502.Components;
-internal class Memory : IMemory
+internal class Memory(IMapper mapper, Ppu ppu) : IMemory
 {
-    private readonly byte[] ram = new byte[2048];
-    private readonly byte[] cartridge = new byte[0x8000];
-    private readonly Ppu ppu; // a plugable model is more flexible but for simplicity we use a specific PPU instance
+    private readonly byte[] ram = new byte[0x0800]; // 2KB RAM (mirrored)
+    private readonly IMapper mapper = mapper;
+    private readonly Ppu ppu = ppu;
 
-    public Memory(Ppu ppu)
+    public byte Read(ushort addr)
     {
-        this.ppu = ppu;
-
-        Array.Clear(ram, 0, ram.Length);
-        Array.Clear(cartridge, 0, cartridge.Length);
+        if (addr < 0x2000)
+            return ram[addr % 0x0800];
+        else if (addr >= 0x2000 && addr < 0x4000)
+            return ppu.ReadRegister((ushort)(0x2000 + (addr % 8)));
+        else if (addr >= 0x8000)
+            return mapper.CpuRead(addr);
+        else
+            return 0;
     }
 
-    public byte Read(ushort address)
+    public void Write(ushort addr, byte value)
     {
-        if (address < 0x2000)
-        {
-            // 2KB RAM + mirror 3 lần
-            return ram[address % 0x0800];
-        }
-        else if (address >= 0x2000 && address <= 0x2007)
-        {
-            // PPU Registers
-            return ppu.ReadRegister((ushort)(address - 0x2000));
-        }
-        //else if (address < 0x4018)
-        //{
-        //    // APU and I/O Registers
-        //}
-        else if (address >= 0x8000)
-        {
-            // PRG ROM từ cartridge
-            return cartridge[address - 0x8000];
-        }
-        else
-        {
-            // TODO: xử lý APU, I/O, expansion
-            return 0x00;
-        }
-    }
-
-    public void Write(ushort address, byte value)
-    {
-        if (address < 0x2000)
-        {
-            ram[address % 0x0800] = value;
-        }
-        else if (address >= 0x2000 && address <= 0x2007)
-        {
-            // PPU Registers
-            ppu.WriteRegister((ushort)(address - 0x2000), value);
-        }
-        else if (address >= 0x8000)
-        {
-            cartridge[address - 0x8000] = value;
-        }
-        else
-        {
-            // TODO: xử lý APU, cartridge RAM, v.v.
-        }
+        if (addr < 0x2000)
+            ram[addr % 0x0800] = value;
+        else if (addr >= 0x2000 && addr < 0x4000)
+            ppu.WriteRegister((ushort)(0x2000 + (addr % 8)), value);
+        else if (addr >= 0x8000)
+            mapper.CpuWrite(addr, value); // có thể bỏ qua nếu ROM không ghi
     }
 
     public byte this[ushort i]
     {
         get => Read(i);
         set => Write(i, value);
-    }
-
-    public void LoadCartridge(byte[] data)
-    {
-        if (data.Length > cartridge.Length)
-            throw new ArgumentException("Cartridge data exceeds maximum size.");
-        Array.Copy(data, cartridge, data.Length);
     }
 }

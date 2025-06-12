@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace rom_loader;
+namespace rom;
 public class NesRomHeader
 {
+    // http://fms.komkon.org/EMUL8/NES.html#LABM
+    // https://www.nesdev.org/wiki/INES
+
     public const int HeaderSize = 16; // NES file header size in bytes
     public byte[] MagicNumber { get; } = new byte[4]; // "NES" magic number
     public byte PrgRomSize { get; set; } // Size of PRG ROM in 16KB units
@@ -14,9 +17,9 @@ public class NesRomHeader
     public byte Flags6 { get; set; } // Flags 6
     public byte Flags7 { get; set; } // Flags 7
     public byte PrgRamSize { get; set; } // Size of PRG RAM in 8KB units (usually 0)
-    public byte Flags9 { get; set; } // Flags 9
+    public byte Flags9 { get; set; } // bit 0: 1 for PAL cartridges, otherwise assume NTSC
     public byte Flags10 { get; set; } // Flags 10
-    public ushort MapperId => (ushort)((Flags6 >> 4) | (Flags7 & 0xF0));
+    public ushort MapperId => (ushort)(Flags6 >> 4 | Flags7 & 0xF0);
     public NesRomHeader(byte[] headerData): this(headerData.AsSpan())
     {
     }

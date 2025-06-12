@@ -1,4 +1,4 @@
-﻿namespace rom_loader;
+﻿namespace rom;
 public class NesRom(NesRomHeader header, byte[] prgRom, byte[] chrRom)
 {
     public NesRomHeader Header { get; private set; } = header;

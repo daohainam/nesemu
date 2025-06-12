@@ -1,4 +1,6 @@
-﻿namespace rom_loader;
+﻿using rom;
+
+namespace rom_loader;
 public class NesRomLoader: IRomLoader
 {
     // https://www.nesdev.org/wiki/INES
@@ -32,7 +34,7 @@ public class NesRomLoader: IRomLoader
         
         if (bytes.Length < NesRomHeader.HeaderSize + prgRomSize + chrRomSize)
             throw new InvalidDataException("Invalid NES ROM: Data size does not match header sizes.");
-        
+
         var rom = new NesRom(
             header,
             bytes.Slice(NesRomHeader.HeaderSize, prgRomSize).ToArray(),

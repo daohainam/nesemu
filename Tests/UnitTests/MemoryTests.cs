@@ -1,4 +1,6 @@
-﻿using mini_6502.Components;
+﻿using mini_6502;
+using mini_6502.Components;
+using System;
 
 namespace UnitTests;
 public class MemoryTests
@@ -8,7 +10,7 @@ public class MemoryTests
     {
         // Arrange
         var ppu = new Ppu();
-        var memory = new Memory(ppu);
+        var memory = new Memory(MapperFactory.CreateMapper0(), ppu);
         byte salt = 0x42;
 
         // Act
@@ -31,7 +33,7 @@ public class MemoryTests
     {
         // Arrange
         var ppu = new Ppu();
-        var memory = new Memory(ppu);
+        var memory = new Memory(MapperFactory.CreateMapper0(), ppu);
         byte salt = 0x77;
 
         // Act
