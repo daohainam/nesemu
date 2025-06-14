@@ -42,18 +42,8 @@ public class NES
         cpu.Clock();
     }
 
-    public void LoadCartridge(byte[] romData)
-    {
-        if (romData.Length < 0x4000)
-            throw new ArgumentException("ROM data must be at least 16KB long.");
-
-        memory.Write(0xFFFC, 0x00); // Reset vector low byte
-        memory.Write(0xFFFD, 0x80); // Reset vector high byte
-    }
-
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
-        Reset();
         while (!cancellationToken.IsCancellationRequested)
         {
             // var startTime = DateTime.UtcNow;
@@ -78,7 +68,5 @@ public class NES
         ppu = new Ppu();
         memory = new Memory(mapper, ppu);
         cpu = new Cpu(memory);
-
-        LoadCartridge(rom.PrgRom);
     }
 }

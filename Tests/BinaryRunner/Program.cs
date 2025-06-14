@@ -1,22 +1,24 @@
 ﻿using mini_6502;
+using rom;
 using System.IO;
-
-var nes = new NES();
 
 // Read ROM data from file
 var romPath = @"roms\registers.nes";
-byte[] romData;
-if (File.Exists(romPath))
-{
-    romData = File.ReadAllBytes(romPath);
-}
-else
+
+if (!File.Exists(romPath))
 {
     Console.WriteLine($"ROM file not found: {romPath}");
     return;
 }
 
-nes.LoadCartridge(romData);
+var romRoader = new rom_loader.NesRomLoader();
+
+var rom = await romRoader.LoadRomAsync(romPath);
+
+var nes = new NES();
+
+nes.LoadRom(rom);
+nes.Reset();
 
 var cancellationTokenSource = new CancellationTokenSource();
 var cancellationToken = new CancellationTokenSource();
