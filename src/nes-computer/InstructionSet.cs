@@ -164,6 +164,12 @@ internal partial class InstructionSet
         instructions[0x6E] = new Instruction("ROR", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpROR);
         instructions[0x7E] = new Instruction("ROR", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpROR);
 
+        // Jumps & Calls
+        instructions[0x4C] = new Instruction("JMP", AddressingMode.Absolute, 3, 3, InstructionSet_Jump.OpJMP);
+        instructions[0x6C] = new Instruction("JMP", AddressingMode.Indirect, 5, 5, InstructionSet_Jump.OpJMP);
+        instructions[0x20] = new Instruction("JSR", AddressingMode.Absolute, 6, 3, InstructionSet_Jump.OpJSR);
+        instructions[0x60] = new Instruction("RTS", AddressingMode.Implied, 6, 1, InstructionSet_Jump.OpRTS);
+
         // Branching Instructions
         instructions[0x90] = new Instruction("BCC", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBCC);
         instructions[0xB0] = new Instruction("BCS", AddressingMode.Relative, 2, 2, InstructionSet_Branching.OpBCS);
