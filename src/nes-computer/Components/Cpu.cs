@@ -1,4 +1,6 @@
-﻿namespace mini_6502.Components;
+﻿using Microsoft.Extensions.Logging;
+
+namespace mini_6502.Components;
 internal class Cpu: IDebugable
 {
     // Registers
@@ -10,11 +12,14 @@ internal class Cpu: IDebugable
     public byte P; // Processor Status Register
 
     private readonly IMemory memory;
+    private readonly ILogger<Cpu> logger;
     private int cycles;
 
-    public Cpu(IMemory memory)
+    public Cpu(IMemory memory, Microsoft.Extensions.Logging.ILogger<Cpu> logger)
     {
-        this.memory = memory;
+        this.memory = memory ?? throw new ArgumentNullException(nameof(memory));
+        this.logger = logger;
+
         Reset();
     }
 
@@ -33,6 +38,13 @@ internal class Cpu: IDebugable
         {
             byte opcode = memory.Read(PC++);
             Instruction instr = InstructionSet.Instance[opcode];
+
+            if (logger.IsEnabled(LogLevel.Debug))
+            {
+                logger.LogDebug("Executing instruction: {mnemonic} at PC={opc:X4}, A={a:X2}, X={x:X2}, Y={y:X2}, SP={sp:X2}, P={p:X2}",
+                    instr.Mnemonic, PC - 1, A, X, Y, SP, P);
+            }
+
             instr.Execute(this, memory, instr.Mode);
             cycles = instr.Cycles;
         }

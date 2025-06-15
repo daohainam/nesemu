@@ -1,4 +1,6 @@
-﻿using mini_6502.Components;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using mini_6502.Components;
 using rom;
 using System.Runtime.CompilerServices;
 
@@ -7,6 +9,7 @@ using System.Runtime.CompilerServices;
 namespace mini_6502;
 public class NES
 {
+    private readonly ILoggerFactory loggerFactory = null!; 
     private int clockFrequency = 1789773; // Default clock frequency
     private int milliSecondsPerClock = 1000000 / 1789773; // Convert clock frequency to milliseconds per clock cycle
 
@@ -27,8 +30,17 @@ public class NES
     private Memory memory;
     private Ppu ppu;
 
-    public NES()
+    public NES(NesRom rom, ILoggerFactory loggerFactory)
     {
+        ArgumentNullException.ThrowIfNull(rom, nameof(rom));
+
+        loggerFactory ??= NullLoggerFactory.Instance;
+
+        var mapper = MapperFactory.CreateMapper(rom) ?? throw new InvalidOperationException("Unsupported mapper type in the ROM.");
+
+        ppu = new Ppu();
+        memory = new Memory(mapper, ppu, loggerFactory.CreateLogger<Memory>());
+        cpu = new Cpu(memory, loggerFactory.CreateLogger<Cpu>());
     }
 
     public void Reset()
@@ -48,7 +60,6 @@ public class NES
         {
             // var startTime = DateTime.UtcNow;
 
-            Console.WriteLine("Clock!");
             Clock();
 
             //var timeElapsed = DateTime.UtcNow - startTime;
@@ -57,16 +68,5 @@ public class NES
             //    await Task.Delay(TimeSpan.FromMilliseconds(milliSecondsPerClock - timeElapsed.TotalMilliseconds), cancellationToken);
             //}
         }
-    }
-
-    public void LoadRom(NesRom rom)
-    {
-        ArgumentNullException.ThrowIfNull(rom, nameof(rom));
-
-        var mapper = MapperFactory.CreateMapper(rom) ?? throw new InvalidOperationException("Unsupported mapper type in the ROM.");
-
-        ppu = new Ppu();
-        memory = new Memory(mapper, ppu);
-        cpu = new Cpu(memory);
     }
 }

@@ -1,4 +1,5 @@
-﻿using mini_6502;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using mini_6502;
 using rom;
 using System.IO;
 
@@ -15,9 +16,8 @@ var romRoader = new rom_loader.NesRomLoader();
 
 var rom = await romRoader.LoadRomAsync(romPath);
 
-var nes = new NES();
+var nes = new NES(rom, NullLoggerFactory.Instance);
 
-nes.LoadRom(rom);
 nes.Reset();
 
 var cancellationTokenSource = new CancellationTokenSource();
