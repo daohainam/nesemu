@@ -1,4 +1,5 @@
-﻿using mini_6502.Components;
+﻿using Microsoft.Extensions.Logging;
+using mini_6502.Components;
 
 namespace mini_6502.Instructions;
 internal class InstructionSet_Jump
@@ -7,6 +8,8 @@ internal class InstructionSet_Jump
     {
         ushort address = InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
         context.Cpu.PC = address;
+
+        context.Logger.LogDebug("JMP to 0x{address:X4}", address);
     }
 
     internal static void OpJSR(InstructionContext context)
@@ -15,7 +18,7 @@ internal class InstructionSet_Jump
         IMemory memory = context.Memory;
         AddressingMode mode = context.Mode;
 
-        ushort returnAddress = (ushort)(cpu.PC + 2); // JSR instruction length is 3 bytes
+        ushort returnAddress = (ushort)(cpu.PC + 2);
         memory.Write((ushort)(0x0100 + cpu.SP--), (byte)((returnAddress >> 8) & 0xFF));
         memory.Write((ushort)(0x0100 + cpu.SP--), (byte)(returnAddress & 0xFF));
 
