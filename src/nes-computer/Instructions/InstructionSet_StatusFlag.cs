@@ -3,38 +3,38 @@
 namespace mini_6502.Instructions;
 internal class InstructionSet_StatusFlag
 {
-    internal static void OpCLC(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpCLC(InstructionContext context)
     {
-        cpu.SetFlag(Flags.FLAG_CARRY, false);
+        context.Cpu.SetFlag(Flags.FLAG_CARRY, false);
     }
 
-    internal static void OpCLD(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpCLD(InstructionContext context)
     {
-        cpu.SetFlag(Flags.FLAG_DECIMAL, false);
+        context.Cpu.SetFlag(Flags.FLAG_DECIMAL, false);
     }
 
-    internal static void OpCLI(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpCLI(InstructionContext context)
     {
-        cpu.SetFlag(Flags.FLAG_INTERRUPT, false);
+        context.Cpu.SetFlag(Flags.FLAG_INTERRUPT, false);
     }
 
-    internal static void OpCLV(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpCLV(InstructionContext context)
     {
-        cpu.SetFlag(Flags.FLAG_OVERFLOW, false);
+        context.Cpu.SetFlag(Flags.FLAG_OVERFLOW, false);
     }
 
-    internal static void OpSEC(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpSEC(InstructionContext context)
     {
-        cpu.SetFlag(Flags.FLAG_CARRY, true);
+        context.Cpu.SetFlag(Flags.FLAG_CARRY, true);
     }
 
-    internal static void OpSED(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpSED(InstructionContext context)
     {
-        cpu.SetFlag(Flags.FLAG_DECIMAL, true);
+        context.Cpu.SetFlag(Flags.FLAG_DECIMAL, true);
     }
 
-    internal static void OpSEI(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpSEI(InstructionContext context)
     {
-        cpu.SetFlag(Flags.FLAG_INTERRUPT, true);
+        context.Cpu.SetFlag(Flags.FLAG_INTERRUPT, true);
     }
 }

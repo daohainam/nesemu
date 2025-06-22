@@ -206,7 +206,7 @@ internal partial class InstructionSet
     }
 
     private class InvalidOpcodeInstruction(int index) : Instruction("INVALID", AddressingMode.Implied, 1, 1,
-    (cpu, memory, mode) => Cpu.Panic($"Invalid opcode({index:X4}) at {cpu.PC - 1:X4}."));
+    (context) => Cpu.Panic($"Invalid opcode({index:X4}) at {context.Cpu.PC - 1:X4}."));
 
     public Instruction this[byte opcode] => instructions[opcode];
 

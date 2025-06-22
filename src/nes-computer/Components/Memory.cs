@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace mini_6502.Components;
-internal class Memory(IMapper mapper, Ppu ppu, Microsoft.Extensions.Logging.ILogger<Memory> logger) : IMemory
+internal class Memory(IMapper mapper, Ppu ppu, ILogger<Memory>? logger = null) : IMemory
 {
-    private readonly ILogger<Memory> logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly ILogger<Memory> logger = logger ?? NullLogger<Memory>.Instance;
     private readonly byte[] ram = new byte[0x0800]; // 2KB RAM (mirrored)
     private readonly IMapper mapper = mapper;
     private readonly Ppu ppu = ppu;

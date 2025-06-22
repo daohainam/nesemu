@@ -1,38 +1,40 @@
-﻿using mini_6502.Components;
+﻿using mini_6502;
+using mini_6502.Components;
 
-namespace mini_6502.Instructions;
 internal class InstructionSet_RegisterTransfer
 {
-    internal static void OpTAX(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpTAX(InstructionContext context)
     {
-        cpu.X = cpu.A;
-        cpu.SetZNFlagsByValue(cpu.X);
+        context.Cpu.X = context.Cpu.A;
+        context.Cpu.SetZNFlagsByValue(context.Cpu.X);
     }
 
-    internal static void OpTAY(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpTAY(InstructionContext context)
     {
-        cpu.Y = cpu.A;
-        cpu.SetZNFlagsByValue(cpu.Y);
+        context.Cpu.Y = context.Cpu.A;
+        context.Cpu.SetZNFlagsByValue(context.Cpu.Y);
     }
 
-    internal static void OpTXA(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpTXA(InstructionContext context)
     {
-        cpu.A = cpu.X;
-        cpu.SetZNFlagsByValue(cpu.A);
+        context.Cpu.A = context.Cpu.X;
+        context.Cpu.SetZNFlagsByValue(context.Cpu.A);
     }
 
-    internal static void OpTYA(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpTYA(InstructionContext context)
     {
-        cpu.A = cpu.Y;
-        cpu.SetZNFlagsByValue(cpu.A);
+        context.Cpu.A = context.Cpu.Y;
+        context.Cpu.SetZNFlagsByValue(context.Cpu.A);
     }
-    internal static void OpTSX(Cpu cpu, IMemory memory, AddressingMode mode)
+
+    internal static void OpTSX(InstructionContext context)
     {
-        cpu.X = cpu.SP;
-        cpu.SetZNFlagsByValue(cpu.X);
+        context.Cpu.X = context.Cpu.SP;
+        context.Cpu.SetZNFlagsByValue(context.Cpu.X);
     }
-    internal static void OpTXS(Cpu cpu, IMemory memory, AddressingMode mode)
+
+    internal static void OpTXS(InstructionContext context)
     {
-        cpu.SP = cpu.X;
+        context.Cpu.SP = context.Cpu.X;
     }
 }

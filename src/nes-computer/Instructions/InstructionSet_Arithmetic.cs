@@ -3,176 +3,176 @@
 namespace mini_6502.Instructions;
 internal class InstructionSet_Arithmetic
 {
-    internal static void OpADC(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpADC(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        ushort result = (ushort)(cpu.A + value + (cpu.GetFlag(Flags.FLAG_CARRY) ? 1 : 0));
-        
-        cpu.SetFlag(Flags.FLAG_CARRY, result > 0xFF);
-        cpu.SetZNFlagsByValue((byte)(result & 0xFF));
-        cpu.SetFlag(Flags.FLAG_OVERFLOW, ((cpu.A ^ value) & 0x80) == 0 && ((cpu.A ^ result) & 0x80) != 0);
-        
-        cpu.A = (byte)(result & 0xFF);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+        ushort result = (ushort)(context.Cpu.A + value + (context.Cpu.GetFlag(Flags.FLAG_CARRY) ? 1 : 0));
+
+        context.Cpu.SetFlag(Flags.FLAG_CARRY, result > 0xFF);
+        context.Cpu.SetZNFlagsByValue((byte)(result & 0xFF));
+        context.Cpu.SetFlag(Flags.FLAG_OVERFLOW, ((context.Cpu.A ^ value) & 0x80) == 0 && ((context.Cpu.A ^ result) & 0x80) != 0);
+
+        context.Cpu.A = (byte)(result & 0xFF);
     }
 
-    internal static void OpSBC(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpSBC(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        ushort result = (ushort)(cpu.A - value - (cpu.GetFlag(Flags.FLAG_CARRY) ? 0 : 1));
-        
-        cpu.SetFlag(Flags.FLAG_CARRY, result < 0x100);
-        cpu.SetZNFlagsByValue((byte)(result & 0xFF));
-        cpu.SetFlag(Flags.FLAG_OVERFLOW, ((cpu.A ^ value) & 0x80) != 0 && ((cpu.A ^ result) & 0x80) != 0);
-        
-        cpu.A = (byte)(result & 0xFF);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+        ushort result = (ushort)(context.Cpu.A - value - (context.Cpu.GetFlag(Flags.FLAG_CARRY) ? 0 : 1));
+
+        context.Cpu.SetFlag(Flags.FLAG_CARRY, result < 0x100);
+        context.Cpu.SetZNFlagsByValue((byte)(result & 0xFF));
+        context.Cpu.SetFlag(Flags.FLAG_OVERFLOW, ((context.Cpu.A ^ value) & 0x80) != 0 && ((context.Cpu.A ^ result) & 0x80) != 0);
+
+        context.Cpu.A = (byte)(result & 0xFF);
     }
 
-    internal static void OpCMP(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpCMP(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        ushort result = (ushort)(cpu.A - value);
-        
-        cpu.SetFlag(Flags.FLAG_CARRY, cpu.A >= value);
-        cpu.SetZNFlagsByValue((byte)(result & 0xFF));
-        cpu.SetFlag(Flags.FLAG_OVERFLOW, ((cpu.A ^ value) & 0x80) != 0 && ((cpu.A ^ result) & 0x80) != 0);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+        ushort result = (ushort)(context.Cpu.A - value);
+
+        context.Cpu.SetFlag(Flags.FLAG_CARRY, context.Cpu.A >= value);
+        context.Cpu.SetZNFlagsByValue((byte)(result & 0xFF));
+        context.Cpu.SetFlag(Flags.FLAG_OVERFLOW, ((context.Cpu.A ^ value) & 0x80) != 0 && ((context.Cpu.A ^ result) & 0x80) != 0);
     }
 
-    internal static void OpCPX(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpCPX(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        ushort result = (ushort)(cpu.X - value);
-        
-        cpu.SetFlag(Flags.FLAG_CARRY, cpu.X >= value);
-        cpu.SetZNFlagsByValue((byte)(result & 0xFF));
-        cpu.SetFlag(Flags.FLAG_OVERFLOW, ((cpu.X ^ value) & 0x80) != 0 && ((cpu.X ^ result) & 0x80) != 0);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+        ushort result = (ushort)(context.Cpu.X - value);
+
+        context.Cpu.SetFlag(Flags.FLAG_CARRY, context.Cpu.X >= value);
+        context.Cpu.SetZNFlagsByValue((byte)(result & 0xFF));
+        context.Cpu.SetFlag(Flags.FLAG_OVERFLOW, ((context.Cpu.X ^ value) & 0x80) != 0 && ((context.Cpu.X ^ result) & 0x80) != 0);
     }
 
-    internal static void OpCPY(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpCPY(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        ushort result = (ushort)(cpu.Y - value);
-        
-        cpu.SetFlag(Flags.FLAG_CARRY, cpu.Y >= value);
-        cpu.SetZNFlagsByValue((byte)(result & 0xFF));
-        cpu.SetFlag(Flags.FLAG_OVERFLOW, ((cpu.Y ^ value) & 0x80) != 0 && ((cpu.Y ^ result) & 0x80) != 0);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+        ushort result = (ushort)(context.Cpu.Y - value);
+
+        context.Cpu.SetFlag(Flags.FLAG_CARRY, context.Cpu.Y >= value);
+        context.Cpu.SetZNFlagsByValue((byte)(result & 0xFF));
+        context.Cpu.SetFlag(Flags.FLAG_OVERFLOW, ((context.Cpu.Y ^ value) & 0x80) != 0 && ((context.Cpu.Y ^ result) & 0x80) != 0);
     }
 
-    internal static void OpINC(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpINC(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode, out var address);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode, out var address);
         value = (byte)((value + 1) & 0xFF);
-        memory.Write(address, value);
+        context.Memory.Write(address, value);
 
-        cpu.SetZNFlagsByValue(value);
+        context.Cpu.SetZNFlagsByValue(value);
     }
 
-    internal static void OpDEC(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpDEC(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode, out var address);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode, out var address);
         value = (byte)((value - 1) & 0xFF);
-        memory.Write(address, value);
+        context.Memory.Write(address, value);
 
-        cpu.SetZNFlagsByValue(value);
+        context.Cpu.SetZNFlagsByValue(value);
     }
 
-    internal static void OpINX(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpINX(InstructionContext context)
     {
-        cpu.X = (byte)((cpu.X + 1) & 0xFF);
-        cpu.SetZNFlagsByValue(cpu.X);
+        context.Cpu.X = (byte)((context.Cpu.X + 1) & 0xFF);
+        context.Cpu.SetZNFlagsByValue(context.Cpu.X);
     }
 
-    internal static void OpDEX(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpDEX(InstructionContext context)
     {
-        cpu.X = (byte)((cpu.X - 1) & 0xFF);
-        cpu.SetZNFlagsByValue(cpu.X);
+        context.Cpu.X = (byte)((context.Cpu.X - 1) & 0xFF);
+        context.Cpu.SetZNFlagsByValue(context.Cpu.X);
     }
 
-    internal static void OpINY(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpINY(InstructionContext context)
     {
-        cpu.Y = (byte)((cpu.Y + 1) & 0xFF);
-        cpu.SetZNFlagsByValue(cpu.Y);
+        context.Cpu.Y = (byte)((context.Cpu.Y + 1) & 0xFF);
+        context.Cpu.SetZNFlagsByValue(context.Cpu.Y);
     }
 
-    internal static void OpDEY(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpDEY(InstructionContext context)
     {
-        cpu.Y = (byte)((cpu.Y - 1) & 0xFF);
-        cpu.SetZNFlagsByValue(cpu.Y);
+        context.Cpu.Y = (byte)((context.Cpu.Y - 1) & 0xFF);
+        context.Cpu.SetZNFlagsByValue(context.Cpu.Y);
     }
 
-    internal static void OpASL(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpASL(InstructionContext context)
     {
-        if (mode == AddressingMode.Accumulator) // some documentations treat ASL as Implied mode
+        if (context.Mode == AddressingMode.Accumulator)
         {
-            cpu.SetFlag(Flags.FLAG_CARRY, (cpu.A & 0x80) != 0);
-            cpu.A = (byte)((cpu.A << 1) & 0xFF);
-            cpu.SetZNFlagsByValue(cpu.A);
+            context.Cpu.SetFlag(Flags.FLAG_CARRY, (context.Cpu.A & 0x80) != 0);
+            context.Cpu.A = (byte)((context.Cpu.A << 1) & 0xFF);
+            context.Cpu.SetZNFlagsByValue(context.Cpu.A);
         }
         else
         {
-            byte value = InstructionHelpers.ReadMemory(cpu, memory, mode, out var address);
-            cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x80) != 0);
+            byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode, out var address);
+            context.Cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x80) != 0);
             value = (byte)((value << 1) & 0xFF);
-            memory.Write(address, value);
+            context.Memory.Write(address, value);
 
-            cpu.SetZNFlagsByValue(value);
+            context.Cpu.SetZNFlagsByValue(value);
         }
     }
 
-    internal static void OpLSR(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpLSR(InstructionContext context)
     {
-        if (mode == AddressingMode.Accumulator) // some documentations treat ASL as Implied mode
+        if (context.Mode == AddressingMode.Accumulator)
         {
-            cpu.SetFlag(Flags.FLAG_CARRY, (cpu.A & 0x01) != 0);
-            cpu.A = (byte)(cpu.A >> 1);
-            cpu.SetZNFlagsByValue(cpu.A);
+            context.Cpu.SetFlag(Flags.FLAG_CARRY, (context.Cpu.A & 0x01) != 0);
+            context.Cpu.A = (byte)(context.Cpu.A >> 1);
+            context.Cpu.SetZNFlagsByValue(context.Cpu.A);
         }
         else
         {
-            byte value = InstructionHelpers.ReadMemory(cpu, memory, mode, out var address);
-            cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x01) != 0);
+            byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode, out var address);
+            context.Cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x01) != 0);
             value = (byte)(value >> 1);
-            memory.Write(address, value);
-            cpu.SetZNFlagsByValue(value);
+            context.Memory.Write(address, value);
+            context.Cpu.SetZNFlagsByValue(value);
         }
     }
 
-    internal static void OpROL(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpROL(InstructionContext context)
     {
-        if (mode == AddressingMode.Accumulator)
+        if (context.Mode == AddressingMode.Accumulator)
         {
-            byte carry = (byte)(cpu.GetFlag(Flags.FLAG_CARRY) ? 1 : 0);
-            cpu.SetFlag(Flags.FLAG_CARRY, (cpu.A & 0x80) != 0);
-            cpu.A = (byte)(((cpu.A << 1) | carry) & 0xFF);
-            cpu.SetZNFlagsByValue(cpu.A);
+            byte carry = (byte)(context.Cpu.GetFlag(Flags.FLAG_CARRY) ? 1 : 0);
+            context.Cpu.SetFlag(Flags.FLAG_CARRY, (context.Cpu.A & 0x80) != 0);
+            context.Cpu.A = (byte)(((context.Cpu.A << 1) | carry) & 0xFF);
+            context.Cpu.SetZNFlagsByValue(context.Cpu.A);
         }
         else
         {
-            byte value = InstructionHelpers.ReadMemory(cpu, memory, mode, out var address);
-            byte carry = (byte)(cpu.GetFlag(Flags.FLAG_CARRY) ? 1 : 0);
-            cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x80) != 0);
+            byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode, out var address);
+            byte carry = (byte)(context.Cpu.GetFlag(Flags.FLAG_CARRY) ? 1 : 0);
+            context.Cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x80) != 0);
             value = (byte)(((value << 1) | carry) & 0xFF);
-            memory.Write(address, value);
-            cpu.SetZNFlagsByValue(value);
+            context.Memory.Write(address, value);
+            context.Cpu.SetZNFlagsByValue(value);
         }
     }
 
-    internal static void OpROR(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpROR(InstructionContext context)
     {
-        if (mode == AddressingMode.Accumulator)
+        if (context.Mode == AddressingMode.Accumulator)
         {
-            byte carry = (byte)(cpu.GetFlag(Flags.FLAG_CARRY) ? 0x80 : 0);
-            cpu.SetFlag(Flags.FLAG_CARRY, (cpu.A & 0x01) != 0);
-            cpu.A = (byte)((cpu.A >> 1) | carry);
-            cpu.SetZNFlagsByValue(cpu.A);
+            byte carry = (byte)(context.Cpu.GetFlag(Flags.FLAG_CARRY) ? 0x80 : 0);
+            context.Cpu.SetFlag(Flags.FLAG_CARRY, (context.Cpu.A & 0x01) != 0);
+            context.Cpu.A = (byte)((context.Cpu.A >> 1) | carry);
+            context.Cpu.SetZNFlagsByValue(context.Cpu.A);
         }
         else
         {
-            byte value = InstructionHelpers.ReadMemory(cpu, memory, mode, out var address);
-            byte carry = (byte)(cpu.GetFlag(Flags.FLAG_CARRY) ? 0x80 : 0);
-            cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x01) != 0);
+            byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode, out var address);
+            byte carry = (byte)(context.Cpu.GetFlag(Flags.FLAG_CARRY) ? 0x80 : 0);
+            context.Cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x01) != 0);
             value = (byte)((value >> 1) | carry);
-            memory.Write(address, value);
-            cpu.SetZNFlagsByValue(value);
+            context.Memory.Write(address, value);
+            context.Cpu.SetZNFlagsByValue(value);
         }
     }
 }

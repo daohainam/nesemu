@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace mini_6502.Components;
-internal class Cpu: IDebugable
+internal class Cpu : IDebugable
 {
     // Registers
     public byte A; // Accumulator
@@ -15,10 +16,10 @@ internal class Cpu: IDebugable
     private readonly ILogger<Cpu> logger;
     private int cycles;
 
-    public Cpu(IMemory memory, Microsoft.Extensions.Logging.ILogger<Cpu> logger)
+    public Cpu(IMemory memory, ILogger<Cpu>? logger = null)
     {
         this.memory = memory ?? throw new ArgumentNullException(nameof(memory));
-        this.logger = logger;
+        this.logger = logger ?? NullLogger<Cpu>.Instance;
 
         Reset();
     }
@@ -45,7 +46,8 @@ internal class Cpu: IDebugable
                     instr.Mnemonic, PC - 1, A, X, Y, SP, P);
             }
 
-            instr.Execute(this, memory, instr.Mode);
+            var context = new InstructionContext(this, memory, instr.Mode, logger);
+            instr.Execute(context);
             cycles = instr.Cycles;
         }
         cycles--;
@@ -60,7 +62,8 @@ internal class Cpu: IDebugable
     }
 
     public bool GetFlag(byte flag) => (P & flag) != 0;
-    internal int Cycles { 
+    internal int Cycles
+    {
         get => cycles;
         set => cycles = value;
     }

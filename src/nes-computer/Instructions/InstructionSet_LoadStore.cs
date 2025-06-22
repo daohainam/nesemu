@@ -4,9 +4,9 @@ namespace mini_6502.Instructions;
 internal class InstructionSet_LoadStore
 {
     // https://www.masswerk.at/6502/6502_instruction_set.html
-    internal static void OpLDA(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpLDA(InstructionContext context)
     {
-        switch (mode)
+        switch (context.Mode)
         {
             case AddressingMode.Immediate:
             case AddressingMode.ZeroPage:
@@ -16,56 +16,56 @@ internal class InstructionSet_LoadStore
             case AddressingMode.AbsoluteY:
             case AddressingMode.IndirectX:
             case AddressingMode.IndirectY:
-                byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-                cpu.A = value;
-                cpu.SetZNFlagsByValue(value);
+                byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+                context.Cpu.A = value;
+                context.Cpu.SetZNFlagsByValue(value);
                 break;
             default:
-                Cpu.Panic($"LDA: Unsupported addressing mode: {mode}");
+                Cpu.Panic($"LDA: Unsupported addressing mode: {context.Mode}");
                 break;
         }
     }
 
-    internal static void OpLDX(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpLDX(InstructionContext context)
     {
-        switch (mode)
+        switch (context.Mode)
         {
             case AddressingMode.Immediate:
             case AddressingMode.ZeroPage:
             case AddressingMode.ZeroPageY:
             case AddressingMode.Absolute:
             case AddressingMode.AbsoluteY:
-                byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-                cpu.X = value;
-                cpu.SetZNFlagsByValue(value);
+                byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+                context.Cpu.X = value;
+                context.Cpu.SetZNFlagsByValue(value);
                 break;
             default:
-                Cpu.Panic($"LDX: Unsupported addressing mode: {mode}");
+                Cpu.Panic($"LDX: Unsupported addressing mode: {context.Mode}");
                 break;
         }
     }
 
-    internal static void OpLDY(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpLDY(InstructionContext context)
     {
-        switch (mode)
+        switch (context.Mode)
         {
             case AddressingMode.Immediate:
             case AddressingMode.ZeroPage:
             case AddressingMode.ZeroPageX:
             case AddressingMode.Absolute:
             case AddressingMode.AbsoluteX:
-                byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-                cpu.Y = value;
-                cpu.SetZNFlagsByValue(value);
+                byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+                context.Cpu.Y = value;
+                context.Cpu.SetZNFlagsByValue(value);
                 break;
             default:
-                Cpu.Panic($"LDY: Unsupported addressing mode: {mode}");
+                Cpu.Panic($"LDY: Unsupported addressing mode: {context.Mode}");
                 break;
         }
     }
-    internal static void OpSTA(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpSTA(InstructionContext context)
     {
-        switch (mode)
+        switch (context.Mode)
         {
             case AddressingMode.ZeroPage:
             case AddressingMode.ZeroPageX:
@@ -74,45 +74,43 @@ internal class InstructionSet_LoadStore
             case AddressingMode.AbsoluteY:
             case AddressingMode.IndirectX:
             case AddressingMode.IndirectY:
-                InstructionHelpers.WriteMemory(cpu, memory, mode, cpu.A);
+                InstructionHelpers.WriteMemory(context.Cpu, context.Memory, context.Mode, context.Cpu.A);
                 break;
             default:
-                Cpu.Panic($"STA: Unsupported addressing mode: {mode}");
+                Cpu.Panic($"STA: Unsupported addressing mode: {context.Mode}");
                 break;
         }
     }
 
-    internal static void OpSTX(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpSTX(InstructionContext context)
     {
-        switch (mode)
+        switch (context.Mode)
         {
             case AddressingMode.ZeroPage:
             case AddressingMode.ZeroPageY:
             case AddressingMode.Absolute:
             case AddressingMode.AbsoluteY:
-                InstructionHelpers.WriteMemory(cpu, memory, mode, cpu.X);
+                InstructionHelpers.WriteMemory(context.Cpu, context.Memory, context.Mode, context.Cpu.X);
                 break;
             default:
-                Cpu.Panic($"STX: Unsupported addressing mode: {mode}");
+                Cpu.Panic($"STX: Unsupported addressing mode: {context.Mode}");
                 break;
         }
     }
 
-    internal static void OpSTY(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpSTY(InstructionContext context)
     {
-        switch (mode)
+        switch (context.Mode)
         {
             case AddressingMode.ZeroPage:
             case AddressingMode.ZeroPageX:
             case AddressingMode.Absolute:
             case AddressingMode.AbsoluteX:
-                InstructionHelpers.WriteMemory(cpu, memory, mode, cpu.Y);
+                InstructionHelpers.WriteMemory(context.Cpu, context.Memory, context.Mode, context.Cpu.Y);
                 break;
             default:
-                Cpu.Panic($"STY: Unsupported addressing mode: {mode}");
+                Cpu.Panic($"STY: Unsupported addressing mode: {context.Mode}");
                 break;
         }
     }
-
-
 }

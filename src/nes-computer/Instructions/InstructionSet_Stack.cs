@@ -1,26 +1,26 @@
-﻿using mini_6502.Components;
+﻿using mini_6502;
+using mini_6502.Components;
 
-namespace mini_6502.Instructions;
 internal class InstructionSet_Stack
 {
-    internal static void OpPHA(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpPHA(InstructionContext context)
     {
-        memory.Write((ushort)(0x100 + cpu.SP--), cpu.A);
+        context.Memory.Write((ushort)(0x100 + context.Cpu.SP--), context.Cpu.A);
     }
 
-    internal static void OpPHP(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpPHP(InstructionContext context)
     {
-        memory.Write((ushort)(0x100 + cpu.SP--), cpu.P);
+        context.Memory.Write((ushort)(0x100 + context.Cpu.SP--), context.Cpu.P);
     }
 
-    internal static void OpPLA(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpPLA(InstructionContext context)
     {
-        cpu.A = memory.Read((ushort)(0x100 + ++cpu.SP));
-        cpu.SetZNFlagsByValue(cpu.A);
+        context.Cpu.A = context.Memory.Read((ushort)(0x100 + ++context.Cpu.SP));
+        context.Cpu.SetZNFlagsByValue(context.Cpu.A);
     }
 
-    internal static void OpPLP(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpPLP(InstructionContext context)
     {
-        cpu.P = memory.Read((ushort)(0x100 + ++cpu.SP));
+        context.Cpu.P = context.Memory.Read((ushort)(0x100 + ++context.Cpu.SP));
     }
 }

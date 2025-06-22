@@ -3,12 +3,12 @@
 namespace mini_6502.Instructions;
 internal class InstructionHelpers
 {
-    internal static byte ReadMemory(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static ushort ReadMemory(Cpu cpu, IMemory memory, AddressingMode mode)
     {
         return ReadMemory(cpu, memory, mode, out var _);
     }
 
-    internal static byte ReadMemory(Cpu cpu, IMemory memory, AddressingMode mode, out ushort address)
+    internal static ushort ReadMemory(Cpu cpu, IMemory memory, AddressingMode mode, out ushort address)
     {
         switch (mode)
         {
@@ -26,13 +26,13 @@ internal class InstructionHelpers
                 return memory.Read(address);
             case AddressingMode.Absolute:
                 address = (ushort)(memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8));
-                return memory.Read(address);
+                return address;
             case AddressingMode.AbsoluteX:
                 address = (ushort)((memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8)) + cpu.X);
-                return memory.Read(address);
+                return address;
             case AddressingMode.AbsoluteY:
                 address = (ushort)((memory.Read(cpu.PC++) | (memory.Read(cpu.PC++) << 8)) + cpu.Y);
-                return memory.Read(address);
+                return address;
             case AddressingMode.IndirectX:
                 byte zpAddress = memory.Read(cpu.PC++);
                 ushort indirectAddress = (ushort)(zpAddress + cpu.X);

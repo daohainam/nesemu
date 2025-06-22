@@ -1,40 +1,37 @@
-﻿using mini_6502.Components;
+﻿using mini_6502;
+using mini_6502.Instructions;
 
-namespace mini_6502.Instructions;
 internal class InstructionSet_Logical
 {
-    internal static void OpAND(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpAND(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        cpu.A &= value;
-        cpu.SetFlag(Flags.FLAG_ZERO, cpu.A == 0);
-        cpu.SetFlag(Flags.FLAG_NEGATIVE, (cpu.A & 0x80) != 0);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+        context.Cpu.A &= value;
+        context.Cpu.SetFlag(Flags.FLAG_ZERO, context.Cpu.A == 0);
+        context.Cpu.SetFlag(Flags.FLAG_NEGATIVE, (context.Cpu.A & 0x80) != 0);
     }
 
-    internal static void OpORA(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpORA(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        cpu.A |= value;
-        cpu.SetFlag(Flags.FLAG_ZERO, cpu.A == 0);
-        cpu.SetFlag(Flags.FLAG_NEGATIVE, (cpu.A & 0x80) != 0);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+        context.Cpu.A |= value;
+        context.Cpu.SetFlag(Flags.FLAG_ZERO, context.Cpu.A == 0);
+        context.Cpu.SetFlag(Flags.FLAG_NEGATIVE, (context.Cpu.A & 0x80) != 0);
     }
 
-    internal static void OpEOR(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpEOR(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        cpu.A ^= value;
-        cpu.SetFlag(Flags.FLAG_ZERO, cpu.A == 0);
-        cpu.SetFlag(Flags.FLAG_NEGATIVE, (cpu.A & 0x80) != 0);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+        context.Cpu.A ^= value;
+        context.Cpu.SetFlag(Flags.FLAG_ZERO, context.Cpu.A == 0);
+        context.Cpu.SetFlag(Flags.FLAG_NEGATIVE, (context.Cpu.A & 0x80) != 0);
     }
 
-    internal static void OpBIT(Cpu cpu, IMemory memory, AddressingMode mode)
+    internal static void OpBIT(InstructionContext context)
     {
-        byte value = InstructionHelpers.ReadMemory(cpu, memory, mode);
-        cpu.SetFlag(Flags.FLAG_ZERO, (cpu.A & value) == 0);
-        cpu.SetFlag(Flags.FLAG_NEGATIVE, (value & 0x80) != 0);
-        cpu.SetFlag(Flags.FLAG_OVERFLOW, (value & 0x40) != 0);
+        byte value = (byte)InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
+        context.Cpu.SetFlag(Flags.FLAG_ZERO, (context.Cpu.A & value) == 0);
+        context.Cpu.SetFlag(Flags.FLAG_NEGATIVE, (value & 0x80) != 0);
+        context.Cpu.SetFlag(Flags.FLAG_OVERFLOW, (value & 0x40) != 0);
     }
-
-
-
 }

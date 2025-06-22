@@ -1,4 +1,5 @@
-﻿using mini_6502;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using mini_6502;
 using mini_6502.Components;
 using System;
 
