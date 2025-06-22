@@ -22,6 +22,7 @@ public class ROMTests
     }
 
     [Theory]
+    [InlineData("registers.nes", 3000)]
     [InlineData("ram_after_reset.nes", 3000)]
     public async Task Load_ROM_And_Run_TestsAsync(string romName, int milliSeconds)
     {
