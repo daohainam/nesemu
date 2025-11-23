@@ -23,4 +23,12 @@ public partial class Instruction_Tests
         cpu.Cycles = 0; // Reset cycles to 0 to ensure fresh execution
         cpu.PC = cartridgeAddress; // Point to starting address of the cartridge memory
     }
+
+    internal void StepInstruction()
+    {
+        cpu.Clock();               // fetch + execute if cycles == 0
+        while (cpu.Cycles > 0)     // run remaining cycles
+            cpu.Clock();
+    }
+
 }

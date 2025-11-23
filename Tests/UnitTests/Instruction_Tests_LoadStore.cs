@@ -121,15 +121,20 @@ public partial class Instruction_Tests_LoadStore: Instruction_Tests
     {
         byte zpAddress = 0x20;
         cpu.Y = 0x04;
-        ushort effectiveZpAddress = (ushort)(zpAddress + cpu.Y);
-        ushort indirectAddress = 0x1234;
-        memory.Write(effectiveZpAddress, (byte)(indirectAddress & 0xFF));
-        memory.Write((ushort)(effectiveZpAddress + 1), (byte)(indirectAddress >> 8));
-        memory.Write(indirectAddress, defaultTestValue);
+
+        ushort baseAddress = 0x1230;
+        ushort effectiveAddress = (ushort)(baseAddress + cpu.Y);
 
         cpu.PC = 0x8000;
-        memory.Write((ushort)(cpu.PC), 0xB1);
+        memory.Write((ushort)cpu.PC, 0xB1); // LDA (indirect),Y
         memory.Write((ushort)(cpu.PC + 1), zpAddress);
+
+        // (zpAddress) -> baseAddress
+        memory.Write(zpAddress, (byte)(baseAddress & 0xFF));
+        memory.Write((ushort)(zpAddress + 1), (byte)(baseAddress >> 8));
+
+        // baseAddress + Y chứa giá trị
+        memory.Write(effectiveAddress, defaultTestValue);
 
         cpu.Clock();
 
@@ -390,20 +395,25 @@ public partial class Instruction_Tests_LoadStore: Instruction_Tests
     {
         byte zpAddress = 0x20;
         cpu.Y = 0x04;
-        ushort effectiveZpAddress = (ushort)(zpAddress + cpu.Y);
-        ushort indirectAddress = 0x1234;
-        memory.Write(effectiveZpAddress, (byte)(indirectAddress & 0xFF));
-        memory.Write((ushort)(effectiveZpAddress + 1), (byte)(indirectAddress >> 8));
+
+        ushort baseAddress = 0x1230;
+        ushort effectiveAddress = (ushort)(baseAddress + cpu.Y);
         cpu.A = defaultTestValue;
 
+        // (zpAddress) -> baseAddress
+        memory.Write(zpAddress, (byte)(baseAddress & 0xFF));
+        memory.Write((ushort)(zpAddress + 1), (byte)(baseAddress >> 8));
+
         cpu.PC = 0x8000;
-        memory.Write((ushort)(cpu.PC), 0x91);
+        memory.Write(cpu.PC, 0x91); // STA (indirect),Y
         memory.Write((ushort)(cpu.PC + 1), zpAddress);
+
         cpu.Clock();
 
-        Assert.Equal(defaultTestValue, memory.Read(indirectAddress));
+        Assert.Equal(defaultTestValue, memory.Read(effectiveAddress));
         Assert.Equal(0x8002, cpu.PC);
     }
+
 
     [Fact]
     public void STX_ZeroPage_Instruction_Test()

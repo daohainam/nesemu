@@ -22,8 +22,8 @@ public partial class Instruction_Tests_Branching: Instruction_Tests
         { "BEQ", OP_CODE_BEQ, 0x8000, 0x0F, false, false, false, false, 0x8002 },
         { "BNE", OP_CODE_BNE, 0x8000, 0x0F, true, false, false, false, 0x8011 },
         { "BNE", OP_CODE_BNE, 0x8000, 0x0F, true, true, false, false, 0x8002 },
-        { "BPL", OP_CODE_BPL, 0x8000, 0x0F, false, false, true, false, 0x8011 },
-        { "BPL", OP_CODE_BPL, 0x8000, 0x0F, false, false, false, false, 0x8002 },
+        { "BPL", OP_CODE_BPL, 0x8000, 0x0F, false, false, false, false, 0x8011 }, // N = 0 -> branch
+        { "BPL", OP_CODE_BPL, 0x8000, 0x0F, false, false, true,  false, 0x8002 }, // N = 1 -> không branch
         { "BMI", OP_CODE_BMI, 0x8000, 0xF1 /* -15 */, true ,false ,true ,false , 0x8002 - 15 },
         { "BMI", OP_CODE_BMI , 0x8001 , 15 ,false ,false ,true ,false , 0x8003 + 15  },
         { "BVC", OP_CODE_BVC , 0x8001 , -15 ,false ,false ,false ,false , 0x8003 - 15 },

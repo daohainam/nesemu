@@ -118,12 +118,24 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
         cpu.A = 0x10;
         cpu.Y = 0x05;
         cpu.PC = cartridgeAddress;
-        memory.Write(cartridgeAddress, 0x71); // Opcode for ADC Indirect Y
-        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
-        memory.Write(0x0020, 0x20);
-        memory.Write(0x0025, 0x20);
+
+        byte zpAddress = 0x20;
+        ushort baseAddress = 0x1230;
+        ushort effectiveAddress = (ushort)(baseAddress + cpu.Y);
+
+        memory.Write(cartridgeAddress, 0x71); // ADC (indirect),Y
+        memory.Write((ushort)(cartridgeAddress + 1), zpAddress);
+
+        // (zpAddress) -> baseAddress
+        memory.Write(zpAddress, (byte)(baseAddress & 0xFF));
+        memory.Write((ushort)(zpAddress + 1), (byte)(baseAddress >> 8));
+
+        // baseAddress + Y chứa toán hạng
+        memory.Write(effectiveAddress, 0x20);
+
         cpu.Clock();
-        Assert.Equal(0x30, cpu.A);
+
+        Assert.Equal(0x30, cpu.A); // 0x10 + 0x20
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 
@@ -131,11 +143,19 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
     public void SBC_Immediate_Instruction_Test()
     {
         cpu.A = 0x10;
+        cpu.SetFlag(Flags.FLAG_CARRY, true); // No initial borrow
         cpu.PC = cartridgeAddress;
-        memory.Write(cartridgeAddress, 0x69); // Opcode for ADC Immediate
-        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+
+        memory.Write(cartridgeAddress, 0xE9); // SBC Immediate
+        memory.Write((ushort)(cartridgeAddress + 1), 0x01);
+
         cpu.Clock();
-        Assert.Equal(0x30, cpu.A);
+
+        // 0x10 - 0x01 = 0x0F, không borrow => C = 1
+        Assert.Equal(0x0F, cpu.A);
+        Assert.False(cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.False(cpu.GetFlag(Flags.FLAG_NEGATIVE));
+        Assert.True(cpu.GetFlag(Flags.FLAG_CARRY));
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 
@@ -234,39 +254,67 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
         cpu.A = 0x10;
         cpu.Y = 0x05;
         cpu.PC = cartridgeAddress;
-        memory.Write(cartridgeAddress, 0xF1); // Opcode for SBC Indirect Y
-        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
-        memory.Write(0x0020, 0x20);
-        memory.Write(0x0025, 0x20);
+
+        byte zpAddress = 0x20;
+        ushort baseAddress = 0x1230;
+        ushort effectiveAddress = (ushort)(baseAddress + cpu.Y);
+
+        memory.Write(cartridgeAddress, 0xF1); // SBC (indirect),Y
+        memory.Write((ushort)(cartridgeAddress + 1), zpAddress);
+
+        // (zpAddress) -> baseAddress
+        memory.Write(zpAddress, (byte)(baseAddress & 0xFF));
+        memory.Write((ushort)(zpAddress + 1), (byte)(baseAddress >> 8));
+
+        // baseAddress + Y chứa toán hạng
+        memory.Write(effectiveAddress, 0x20);
+
         cpu.Clock();
+
+        // C khởi tạo = 0 (sau Reset), nên 0x10 - 0x20 - 1 = 0xEF
         Assert.Equal(0xEF, cpu.A);
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
+
 
     [Fact]
     public void CMP_Immediate_Instruction_Test()
     {
         cpu.A = 0x10;
         cpu.PC = cartridgeAddress;
-        memory.Write(cartridgeAddress, 0x69); // Opcode for ADC Immediate
-        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
+
+        memory.Write(cartridgeAddress, 0xC9); // CMP Immediate
+        memory.Write((ushort)(cartridgeAddress + 1), 0x10); // so sánh bằng
+
         cpu.Clock();
-        Assert.Equal(0x30, cpu.A);
+
+        Assert.Equal(0x10, cpu.A); // A không đổi
+        Assert.True(cpu.GetFlag(Flags.FLAG_ZERO));     // A == M
+        Assert.True(cpu.GetFlag(Flags.FLAG_CARRY));    // A >= M
+        Assert.False(cpu.GetFlag(Flags.FLAG_NEGATIVE));// bit 7 của (A-M)
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 
+
     [Fact]
-    public void CMPC_ZeroPage_Instruction_Test()
+    public void CMP_ZeroPage_Instruction_Test()
     {
         cpu.A = 0x10;
         cpu.PC = cartridgeAddress;
-        memory.Write(cartridgeAddress, 0xC5); // Opcode for CMP Zero Page
+
+        memory.Write(cartridgeAddress, 0xC5); // CMP Zero Page
         memory.Write((ushort)(cartridgeAddress + 1), 0x20);
-        memory.Write(0x0020, 0x20);
+        memory.Write(0x0020, 0x10); // bằng với A
+
         cpu.Clock();
+
         Assert.Equal(0x10, cpu.A);
+        Assert.True(cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.True(cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.False(cpu.GetFlag(Flags.FLAG_NEGATIVE));
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
+
 
     [Fact]
     public void CMP_ZeroPageX_Instruction_Test()
@@ -332,11 +380,27 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
         cpu.A = 0x10;
         cpu.X = 0x05;
         cpu.PC = cartridgeAddress;
-        memory.Write(cartridgeAddress, 0xC1); // Opcode for CMP Indirect X
-        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
-        memory.Write(0x0025, 0x20);
+
+        byte zpAddress = 0x20;
+        ushort effectiveZpAddress = (ushort)(zpAddress + cpu.X);
+        ushort indirectAddress = 0x1234;
+
+        memory.Write(cartridgeAddress, 0xC1); // CMP (indirect,X)
+        memory.Write((ushort)(cartridgeAddress + 1), zpAddress);
+
+        // (zpAddress + X) -> indirectAddress
+        memory.Write(effectiveZpAddress, (byte)(indirectAddress & 0xFF));
+        memory.Write((ushort)(effectiveZpAddress + 1), (byte)(indirectAddress >> 8));
+
+        // tại indirectAddress là giá trị cần so sánh
+        memory.Write(indirectAddress, 0x10); // bằng A
+
         cpu.Clock();
+
         Assert.Equal(0x10, cpu.A);
+        Assert.True(cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.True(cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.False(cpu.GetFlag(Flags.FLAG_NEGATIVE));
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 
@@ -346,12 +410,27 @@ public partial class Instruction_Tests_Arithmetic: Instruction_Tests
         cpu.A = 0x10;
         cpu.Y = 0x05;
         cpu.PC = cartridgeAddress;
-        memory.Write(cartridgeAddress, 0xD1); // Opcode for CMP Indirect Y
-        memory.Write((ushort)(cartridgeAddress + 1), 0x20);
-        memory.Write(0x0020, 0x20);
-        memory.Write(0x0025, 0x20);
+
+        byte zpAddress = 0x20;
+        ushort baseAddress = 0x1230;
+        ushort effectiveAddress = (ushort)(baseAddress + cpu.Y);
+
+        memory.Write(cartridgeAddress, 0xD1); // CMP (indirect),Y
+        memory.Write((ushort)(cartridgeAddress + 1), zpAddress);
+
+        // (zpAddress) -> baseAddress
+        memory.Write(zpAddress, (byte)(baseAddress & 0xFF));
+        memory.Write((ushort)(zpAddress + 1), (byte)(baseAddress >> 8));
+
+        // baseAddress + Y chứa giá trị so sánh
+        memory.Write(effectiveAddress, 0x10); // bằng A
+
         cpu.Clock();
+
         Assert.Equal(0x10, cpu.A);
+        Assert.True(cpu.GetFlag(Flags.FLAG_ZERO));
+        Assert.True(cpu.GetFlag(Flags.FLAG_CARRY));
+        Assert.False(cpu.GetFlag(Flags.FLAG_NEGATIVE));
         Assert.Equal(cartridgeAddress + 2, cpu.PC);
     }
 

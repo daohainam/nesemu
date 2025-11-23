@@ -55,7 +55,7 @@ public partial class Instruction_Tests_Stack: Instruction_Tests
         cpu.Clock();
         
         Assert.Equal(0x80, cpu.SP); 
-        Assert.Equal(0x55, cpu.P); 
+        Assert.Equal(0x75, cpu.P); // bit 5 is always 1
         Assert.Equal(cartridgeAddress + 1, cpu.PC);
     }
 

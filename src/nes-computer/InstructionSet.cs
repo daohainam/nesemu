@@ -2,6 +2,7 @@
 using mini_6502.Instructions;
 
 namespace mini_6502;
+
 internal partial class InstructionSet
 {
     // http://www.6502.org/users/obelisk/6502/instructions.html
@@ -75,7 +76,7 @@ internal partial class InstructionSet
         instructions[0x39] = new Instruction("AND", AddressingMode.AbsoluteY, 4, 3, InstructionSet_Logical.OpAND);
         instructions[0x21] = new Instruction("AND", AddressingMode.IndirectX, 6, 2, InstructionSet_Logical.OpAND);
         instructions[0x31] = new Instruction("AND", AddressingMode.IndirectY, 5, 2, InstructionSet_Logical.OpAND);
-        instructions[0x49] = new Instruction("EOR", AddressingMode.Immediate, 5, 2, InstructionSet_Logical.OpEOR);
+        instructions[0x49] = new Instruction("EOR", AddressingMode.Immediate, 2, 2, InstructionSet_Logical.OpEOR);
         instructions[0x45] = new Instruction("EOR", AddressingMode.ZeroPage, 3, 2, InstructionSet_Logical.OpEOR);
         instructions[0x55] = new Instruction("EOR", AddressingMode.ZeroPageX, 4, 2, InstructionSet_Logical.OpEOR);
         instructions[0x4D] = new Instruction("EOR", AddressingMode.Absolute, 4, 3, InstructionSet_Logical.OpEOR);
@@ -135,8 +136,8 @@ internal partial class InstructionSet
         instructions[0xCE] = new Instruction("DEC", AddressingMode.Absolute, 6, 3, InstructionSet_Arithmetic.OpDEC);
         instructions[0xDE] = new Instruction("DEC", AddressingMode.AbsoluteX, 7, 3, InstructionSet_Arithmetic.OpDEC);
 
-        instructions[0xE8] = new Instruction("INX", AddressingMode.Implied, 2, 2, InstructionSet_Arithmetic.OpINX);
-        instructions[0xC8] = new Instruction("INY", AddressingMode.Implied, 2, 2, InstructionSet_Arithmetic.OpINY);
+        instructions[0xE8] = new Instruction("INX", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpINX);
+        instructions[0xC8] = new Instruction("INY", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpINY);
         instructions[0xCA] = new Instruction("DEX", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpDEX);
         instructions[0x88] = new Instruction("DEY", AddressingMode.Implied, 2, 1, InstructionSet_Arithmetic.OpDEY);
 
@@ -166,7 +167,7 @@ internal partial class InstructionSet
 
         // Jumps & Calls
         instructions[0x4C] = new Instruction("JMP", AddressingMode.Absolute, 3, 3, InstructionSet_Jump.OpJMP);
-        instructions[0x6C] = new Instruction("JMP", AddressingMode.Indirect, 5, 5, InstructionSet_Jump.OpJMP);
+        instructions[0x6C] = new Instruction("JMP", AddressingMode.Indirect, 5, 3, InstructionSet_Jump.OpJMP);
         instructions[0x20] = new Instruction("JSR", AddressingMode.Absolute, 6, 3, InstructionSet_Jump.OpJSR);
         instructions[0x60] = new Instruction("RTS", AddressingMode.Implied, 6, 1, InstructionSet_Jump.OpRTS);
 
@@ -194,12 +195,12 @@ internal partial class InstructionSet
         instructions[0x40] = new Instruction("RTI", AddressingMode.Implied, 6, 1, InstructionSet_System.OpRTI);
 
         // No Operation (NOP) Instructions
-        instructions[0xEA] = new Instruction("RTS", AddressingMode.Implied, 1, 1, InstructionSet_System.OpNOP);
+        instructions[0xEA] = new Instruction("NOP", AddressingMode.Implied, 2, 1, InstructionSet_System.OpNOP);
 
 
         for (int i = 0; i < instructions.Length; i++)
         {
-            if (instructions[i] is null) 
+            if (instructions[i] is null)
                 instructions[i] = new InvalidOpcodeInstruction(i);
         }
 

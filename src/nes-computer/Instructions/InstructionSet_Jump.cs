@@ -1,28 +1,39 @@
 ﻿using Microsoft.Extensions.Logging;
+using mini_6502;
 using mini_6502.Components;
 
 namespace mini_6502.Instructions;
-internal class InstructionSet_Jump
+
+internal static class InstructionSet_Jump
 {
     internal static void OpJMP(InstructionContext context)
     {
-        ushort address = InstructionHelpers.ReadMemory(context.Cpu, context.Memory, context.Mode);
-        context.Cpu.PC = address;
+        Cpu cpu = context.Cpu;
+        IMemory memory = context.Memory;
 
-        context.Logger.LogDebug("JMP to 0x{address:X4}", address);
+        ushort address = InstructionHelpers.ReadAddress(cpu, memory, context.Mode);
+        cpu.PC = address;
+
+        if (context.Logger.IsEnabled(LogLevel.Debug))
+        {
+            context.Logger.LogDebug("JMP to 0x{address:X4}", address);
+        }
     }
 
     internal static void OpJSR(InstructionContext context)
     {
         Cpu cpu = context.Cpu;
         IMemory memory = context.Memory;
-        AddressingMode mode = context.Mode;
 
-        ushort returnAddress = (ushort)(cpu.PC + 2);
+        // PC is currently pointing at the low-byte operand (I+1)
+        // JSR pushes the address of the last byte of the instruction (I+2) = PC + 1
+        ushort returnAddress = (ushort)(cpu.PC + 1);
+
+        // Push high byte, then low byte
         memory.Write((ushort)(0x0100 + cpu.SP--), (byte)((returnAddress >> 8) & 0xFF));
         memory.Write((ushort)(0x0100 + cpu.SP--), (byte)(returnAddress & 0xFF));
 
-        ushort address = InstructionHelpers.ReadMemory(cpu, memory, mode);
+        ushort address = InstructionHelpers.ReadAddress(cpu, memory, context.Mode);
         cpu.PC = address;
     }
 

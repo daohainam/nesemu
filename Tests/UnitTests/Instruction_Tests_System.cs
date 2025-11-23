@@ -15,19 +15,18 @@ public partial class Instruction_Tests_System: Instruction_Tests
 
         memory.Write(0x80FF, 0x40); // RTI opcode
 
-        cpu.Clock(); 
+        StepInstruction();
 
         Assert.Equal(0x80FF, cpu.PC); 
         Assert.Equal(0xFD - 3, cpu.SP);
         Assert.Equal(0x80, memory.Read(0x01FD)); // PC high byte pushed to stack
         Assert.Equal(0x02, memory.Read(0x01FC)); // PC low byte pushed to stack
-        Assert.Equal(0b0001_0000, memory.Read(0x01FB)); // Status pushed with break flag set
+        Assert.Equal(0b0011_0000, memory.Read(0x01FB)); // Status pushed with break flag set, bit 5 is set 6502 compatibility
 
-        cpu.Cycles = 0; // Reset cycles for next instruction
-        cpu.Clock(); // Execute RTI
+        StepInstruction(); // Execute RTI
 
         Assert.Equal(0x8002, cpu.PC);
         Assert.Equal(0xFD, cpu.SP);
-        Assert.Equal(0b0001_0000, cpu.P);
+        Assert.Equal(0b0011_0000, cpu.P);
     }
 }
