@@ -4,22 +4,15 @@ using mini_6502;
 using Xunit.Abstractions;
 
 namespace ROMTests;
-public class ROMTests
+public class ROMTests(ITestOutputHelper output)
 {
-    private readonly ITestOutputHelper output;
-    private readonly ILoggerFactory loggerFactory;
-
-    public ROMTests(ITestOutputHelper output)
-    {
-        this.output = output;
-
-        this.loggerFactory = LoggerFactory.Create(l =>
+    private readonly ITestOutputHelper output = output;
+    private readonly ILoggerFactory loggerFactory = LoggerFactory.Create(l =>
         {
             l.AddConsole();
             l.AddDebug();
             l.SetMinimumLevel(LogLevel.Debug);
         });
-    }
 
     [Theory]
     [InlineData("registers.nes", 3000)]
@@ -37,7 +30,7 @@ public class ROMTests
         
         nes.Reset();
 
-        var cancellationTokenSource = new CancellationTokenSource();// TimeSpan.FromMilliseconds(milliSeconds));
+        var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(milliSeconds));
         await nes.RunAsync(cancellationTokenSource.Token);
     }
 }

@@ -57,8 +57,7 @@ internal class InstructionSet_Arithmetic
         var cpu = context.Cpu;
         var memory = context.Memory;
 
-        ushort address;
-        byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out address);
+        byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out ushort address);
         value++;
         memory.Write(address, value);
         cpu.SetZNFlagsByValue(value);
@@ -69,8 +68,7 @@ internal class InstructionSet_Arithmetic
         var cpu = context.Cpu;
         var memory = context.Memory;
 
-        ushort address;
-        byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out address);
+        byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out ushort address);
         value--;
         memory.Write(address, value);
         cpu.SetZNFlagsByValue(value);
@@ -123,8 +121,7 @@ internal class InstructionSet_Arithmetic
         }
         else
         {
-            ushort address;
-            byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out address);
+            byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out ushort address);
             cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x80) != 0);
             value = (byte)(value << 1);
             memory.Write(address, value);
@@ -147,8 +144,7 @@ internal class InstructionSet_Arithmetic
         }
         else
         {
-            ushort address;
-            byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out address);
+            byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out ushort address);
             cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x01) != 0);
             value = (byte)(value >> 1);
             memory.Write(address, value);
@@ -174,8 +170,7 @@ internal class InstructionSet_Arithmetic
         }
         else
         {
-            ushort address;
-            byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out address);
+            byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out ushort address);
             cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x80) != 0);
             value = (byte)(value << 1);
             if (oldCarry)
@@ -203,8 +198,7 @@ internal class InstructionSet_Arithmetic
         }
         else
         {
-            ushort address;
-            byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out address);
+            byte value = (byte)InstructionHelpers.ReadMemory(cpu, memory, context.Mode, out ushort address);
             cpu.SetFlag(Flags.FLAG_CARRY, (value & 0x01) != 0);
             value = (byte)(value >> 1);
             if (oldCarry)

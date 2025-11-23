@@ -26,9 +26,9 @@ public class NES
         }
     }
 
-    private Cpu cpu;
-    private Memory memory;
-    private Ppu ppu;
+    private readonly Cpu cpu;
+    private readonly Memory memory;
+    private readonly Ppu ppu;
 
     public NES(NesRom rom, ILoggerFactory loggerFactory)
     {
