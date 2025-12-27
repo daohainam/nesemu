@@ -9,7 +9,6 @@ using System.Runtime.CompilerServices;
 namespace mini_6502;
 public class NES
 {
-    private readonly ILoggerFactory loggerFactory = null!; 
     private int clockFrequency = 1789773; // Default clock frequency
     private int milliSecondsPerClock = 1000000 / 1789773; // Convert clock frequency to milliseconds per clock cycle
 
@@ -30,7 +29,7 @@ public class NES
     private readonly Memory memory;
     private readonly Ppu ppu;
 
-    public NES(NesRom rom, ILoggerFactory loggerFactory)
+    public NES(NesRom rom, ILoggerFactory? loggerFactory = null)
     {
         ArgumentNullException.ThrowIfNull(rom, nameof(rom));
 

@@ -26,11 +26,11 @@ public class NesRomLoader: IRomLoader
         NesRomHeader header = new(bytes[.. NesRomHeader.HeaderSize]);
         if (header.MagicNumber[0] != 'N' || header.MagicNumber[1] != 'E' || header.MagicNumber[2] != 'S')
             throw new InvalidDataException("Invalid NES ROM: Magic number does not match.");
-        if (header.PrgRomSize == 0 || header.ChrRomSize == 0)
-            throw new InvalidDataException("Invalid NES ROM: PRG or CHR ROM size is zero.");
+        if (header.PrgRomSize == 0)
+            throw new InvalidDataException("Invalid NES ROM: PRG ROM size is zero.");
         
         int prgRomSize = header.PrgRomSize * 16384; // 16KB units
-        int chrRomSize = header.ChrRomSize * 8192; // 8KB units
+        int chrRomSize = header.ChrRomSize * 8192; // 8KB units (can be 0 for CHR RAM)
         
         if (bytes.Length < NesRomHeader.HeaderSize + prgRomSize + chrRomSize)
             throw new InvalidDataException("Invalid NES ROM: Data size does not match header sizes.");
@@ -38,7 +38,7 @@ public class NesRomLoader: IRomLoader
         var rom = new NesRom(
             header,
             bytes.Slice(NesRomHeader.HeaderSize, prgRomSize).ToArray(),
-            bytes.Slice(NesRomHeader.HeaderSize + prgRomSize, chrRomSize).ToArray()
+            chrRomSize > 0 ? bytes.Slice(NesRomHeader.HeaderSize + prgRomSize, chrRomSize).ToArray() : []
         );
 
         return rom;
