@@ -28,7 +28,7 @@ internal class Memory(IMapper mapper, Ppu ppu, ILogger<Memory>? logger = null) :
         else if (addr >= 0x2000 && addr < 0x4000)
             ppu.WriteRegister((ushort)(0x2000 + (addr % 8)), value);
         else if (addr >= 0x8000)
-            mapper.CpuWrite(addr, value); // có thể bỏ qua nếu ROM không ghi
+            mapper.CpuWrite(addr, value);
     }
 
     public byte this[ushort i]

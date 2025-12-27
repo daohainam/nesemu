@@ -8,8 +8,8 @@ internal class Cpu : IDebugable
     public byte A; // Accumulator
     public byte X; // Index register X
     public byte Y; // Index register Y
-    public byte SP; // Stack Pointer (chỉ offset trong vùng 0x0100–0x01FF)
-    public ushort PC; // Program Counter (địa chỉ lệnh tiếp theo)
+    public byte SP; // Stack Pointer (offset in range 0x0100-0x01FF)
+    public ushort PC; // Program Counter (next instruction address)
     public byte P; // Processor Status Register
 
     private readonly IMemory memory;
