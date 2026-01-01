@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\nes-computer\nes-computer.csproj" />
+    <ProjectReference Include="..\..\src\rom-loader\rom-loader.csproj" />
+    <ProjectReference Include="..\..\src\rom\rom.csproj" />
   </ItemGroup>
 
   <ItemGroup>
