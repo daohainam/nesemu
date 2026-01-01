@@ -5,4 +5,8 @@ internal interface IPpu
     byte ReadRegister(ushort addr);
     void Reset();
     void WriteRegister(ushort addr, byte value);
+    
+    byte[] GetScreenBuffer();
+    
+    event EventHandler? FrameComplete;
 }

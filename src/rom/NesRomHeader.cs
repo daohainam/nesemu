@@ -65,6 +65,11 @@ public class NesRomHeader
     public ushort MapperId => (ushort)(Flags6 >> 4 | Flags7 & 0xF0);
 
     /// <summary>
+    /// Gets whether the ROM has a 512-byte trainer at $7000-$71FF.
+    /// </summary>
+    public bool HasTrainer => (Flags6 & 0x04) != 0;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="NesRomHeader"/> class from a byte array.
     /// </summary>
     /// <param name="headerData">The header data bytes.</param>

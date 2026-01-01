@@ -39,6 +39,20 @@ public class NES
     private readonly Ppu ppu;
 
     /// <summary>
+    /// Gets the screen buffer as a read-only span containing RGBA pixel data (256x240x4 bytes).
+    /// </summary>
+    public ReadOnlySpan<byte> ScreenBuffer => ppu.GetScreenBuffer();
+
+    /// <summary>
+    /// Event raised when a frame is complete and ready to be rendered.
+    /// </summary>
+    public event EventHandler? FrameComplete
+    {
+        add => ppu.FrameComplete += value;
+        remove => ppu.FrameComplete -= value;
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="NES"/> class with the specified ROM and optional logger factory.
     /// </summary>
     /// <param name="rom">The NES ROM to load.</param>
