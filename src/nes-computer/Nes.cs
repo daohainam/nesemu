@@ -99,15 +99,15 @@ public class NES
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            // var startTime = DateTime.UtcNow;
+            var startTime = DateTime.UtcNow;
 
             Clock();
 
-            //var timeElapsed = DateTime.UtcNow - startTime;
-            //if (timeElapsed.TotalMilliseconds < milliSecondsPerClock)
-            //{
-            //    await Task.Delay(TimeSpan.FromMilliseconds(milliSecondsPerClock - timeElapsed.TotalMilliseconds), cancellationToken);
-            //}
+            var timeElapsed = DateTime.UtcNow - startTime;
+            if (timeElapsed.TotalMilliseconds < milliSecondsPerClock)
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(milliSecondsPerClock - timeElapsed.TotalMilliseconds), cancellationToken);
+            }
         }
     }
 }
