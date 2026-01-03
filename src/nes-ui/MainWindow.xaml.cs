@@ -9,6 +9,12 @@ using rom_loader;
 
 namespace nes_ui;
 
+/// <summary>
+/// Main window for the NES Emulator UI.
+/// Handles ROM loading, screen display, and keyboard input.
+/// Note: Controller input is tracked but not yet connected to the emulator core,
+/// as controller support needs to be implemented in the NES Memory component (addresses 0x4016-0x4017).
+/// </summary>
 public partial class MainWindow : Window
 {
     private NES? _nes;
@@ -131,6 +137,12 @@ public partial class MainWindow : Window
             try
             {
                 var buffer = _nes.ScreenBuffer;
+                
+                if (buffer.Length < 256 * 240 * 4)
+                {
+                    return;
+                }
+                
                 _screenBitmap.Lock();
                 
                 unsafe
