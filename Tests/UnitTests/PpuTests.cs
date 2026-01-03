@@ -191,4 +191,68 @@ public class PpuTests
         
         Assert.Equal(0x22, value);
     }
+
+    [Fact]
+    public void PPU_WithMapper_ReadsChrRom()
+    {
+        var mapper = new mini_6502.Mappers.Mapper0();
+        var ppu = new Ppu(mapper);
+        
+        ppu.WriteRegister(0x2006, 0x00);
+        ppu.WriteRegister(0x2006, 0x10);
+        ppu.WriteRegister(0x2007, 0xAB);
+        
+        ppu.WriteRegister(0x2006, 0x00);
+        ppu.WriteRegister(0x2006, 0x10);
+        
+        ppu.ReadRegister(0x2007);
+        var value = ppu.ReadRegister(0x2007);
+        
+        Assert.Equal(0xAB, value);
+    }
+
+    [Fact]
+    public void ScreenBuffer_UpdatesCorrectly()
+    {
+        var ppu = new Ppu();
+        var initialBuffer = ppu.GetScreenBuffer();
+        
+        Assert.NotNull(initialBuffer);
+        Assert.Equal(256 * 240 * 4, initialBuffer.Length);
+        
+        for (int i = 0; i < 10; i++)
+        {
+            ppu.Clock();
+        }
+        
+        var updatedBuffer = ppu.GetScreenBuffer();
+        Assert.NotNull(updatedBuffer);
+        Assert.Equal(256 * 240 * 4, updatedBuffer.Length);
+    }
+
+    [Fact]
+    public void BackgroundRendering_WithMapper_Works()
+    {
+        var mapper = new mini_6502.Mappers.Mapper0();
+        var ppu = new Ppu(mapper);
+        
+        ppu.WriteRegister(0x2000, 0x80);
+        ppu.WriteRegister(0x2001, 0x08);
+        
+        ppu.WriteRegister(0x2006, 0x20);
+        ppu.WriteRegister(0x2006, 0x00);
+        ppu.WriteRegister(0x2007, 0x01);
+        
+        ppu.WriteRegister(0x2006, 0x3F);
+        ppu.WriteRegister(0x2006, 0x00);
+        ppu.WriteRegister(0x2007, 0x0F);
+        
+        for (int i = 0; i < 341 * 10; i++)
+        {
+            ppu.Clock();
+        }
+        
+        var buffer = ppu.GetScreenBuffer();
+        Assert.NotNull(buffer);
+    }
 }

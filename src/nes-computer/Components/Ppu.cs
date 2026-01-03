@@ -1,4 +1,4 @@
-﻿namespace mini_6502.Components;
+namespace mini_6502.Components;
 
 internal class Ppu: IPpu
 {
@@ -7,6 +7,7 @@ internal class Ppu: IPpu
     private const int TotalScanlines = 262;
     private const int CyclesPerScanline = 341;
     
+    private readonly IMapper? mapper;
     private readonly byte[] vram = new byte[0x800];
     private readonly byte[] oam = new byte[256];
     private readonly byte[] paletteRam = new byte[32];
@@ -31,6 +32,15 @@ internal class Ppu: IPpu
     private const int PPUDATA = 7;
 
     public event EventHandler? FrameComplete;
+
+    public Ppu() : this(null)
+    {
+    }
+
+    public Ppu(IMapper? mapper)
+    {
+        this.mapper = mapper;
+    }
 
     public byte ReadRegister(ushort addr)
     {
@@ -123,7 +133,7 @@ internal class Ppu: IPpu
         
         if (addr < 0x2000)
         {
-            return 0;
+            return mapper?.PpuRead(addr) ?? 0;
         }
         else if (addr < 0x3F00)
         {
@@ -148,7 +158,7 @@ internal class Ppu: IPpu
         
         if (addr < 0x2000)
         {
-            return;
+            mapper?.PpuWrite(addr, value);
         }
         else if (addr < 0x3F00)
         {
@@ -176,6 +186,50 @@ internal class Ppu: IPpu
                 if (pixelIndex >= 0 && pixelIndex + 3 < screenBuffer.Length)
                 {
                     byte paletteIndex = 0;
+                    
+                    bool backgroundEnabled = (registers[PPUMASK] & 0x08) != 0;
+                    
+                    if (backgroundEnabled && mapper != null)
+                    {
+                        int x = cycle - 1;
+                        int y = scanline;
+                        
+                        int tileX = x / 8;
+                        int tileY = y / 8;
+                        
+                        if (tileX < 32 && tileY < 30)
+                        {
+                            int pixelX = x % 8;
+                            int pixelY = y % 8;
+                            
+                            ushort nametableBase = (ushort)(0x2000 | ((registers[PPUCTRL] & 0x03) << 10));
+                            int nametableAddr = nametableBase + tileY * 32 + tileX;
+                            byte tileIndex = ReadVram((ushort)nametableAddr);
+                            
+                            ushort patternTableBase = (ushort)(((registers[PPUCTRL] & 0x10) != 0) ? 0x1000 : 0x0000);
+                            int patternAddr = patternTableBase + tileIndex * 16 + pixelY;
+                            
+                            byte tileLow = ReadVram((ushort)patternAddr);
+                            byte tileHigh = ReadVram((ushort)(patternAddr + 8));
+                            
+                            int bitShift = 7 - pixelX;
+                            byte pixelLow = (byte)((tileLow >> bitShift) & 1);
+                            byte pixelHigh = (byte)((tileHigh >> bitShift) & 1);
+                            paletteIndex = (byte)((pixelHigh << 1) | pixelLow);
+                            
+                            if (paletteIndex > 0)
+                            {
+                                int attributeAddr = nametableBase + 0x3C0 + (tileY / 4) * 8 + (tileX / 4);
+                                byte attribute = ReadVram((ushort)attributeAddr);
+                                
+                                int attributeShift = ((tileY % 4) / 2) * 4 + ((tileX % 4) / 2) * 2;
+                                byte paletteNum = (byte)((attribute >> attributeShift) & 0x03);
+                                
+                                paletteIndex = (byte)(paletteNum * 4 + paletteIndex);
+                            }
+                        }
+                    }
+                    
                     byte colorValue = paletteRam[paletteIndex & 0x1F];
                     
                     screenBuffer[pixelIndex] = colorValue;

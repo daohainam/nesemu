@@ -67,7 +67,7 @@ public class NES
 
         var mapper = MapperFactory.CreateMapper(rom) ?? throw new InvalidOperationException("Unsupported mapper type in the ROM.");
 
-        ppu = new Ppu();
+        ppu = new Ppu(mapper);
         memory = new Memory(mapper, ppu, loggerFactory.CreateLogger<Memory>());
         cpu = new Cpu(memory, loggerFactory.CreateLogger<Cpu>());
     }
