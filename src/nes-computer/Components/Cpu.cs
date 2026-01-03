@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.ObjectPool;
 
 namespace mini_6502.Components;
 internal class Cpu : IDebugable
@@ -15,6 +16,9 @@ internal class Cpu : IDebugable
     private readonly IMemory memory;
     private readonly ILogger<Cpu> logger;
     private int cycles;
+
+    private static readonly ObjectPool<InstructionContext> contextPool =
+        new DefaultObjectPool<InstructionContext>(new InstructionContextPooledObjectPolicy());
 
     public Cpu(IMemory memory, ILogger<Cpu>? logger = null)
     {
@@ -46,8 +50,17 @@ internal class Cpu : IDebugable
                     instr.Mnemonic, PC - 1, A, X, Y, SP, P);
             }
 
-            var context = new InstructionContext(this, memory, instr.Mode, logger);
-            instr.Execute(context);
+            var context = contextPool.Get();
+            context.Initialize(this, memory, instr.Mode, logger);
+            try
+            {
+                instr.Execute(context);
+            }
+            finally
+            {
+                contextPool.Return(context);
+            }
+
             cycles = instr.Cycles;
         }
         cycles--;
@@ -75,5 +88,15 @@ internal class Cpu : IDebugable
     public static void Panic(string message)
     {
         throw new PanicException(message);
+    }
+}
+
+internal class InstructionContextPooledObjectPolicy : PooledObjectPolicy<InstructionContext>
+{
+    public override InstructionContext Create() => new();
+    public override bool Return(InstructionContext obj)
+    {
+        obj.Reset();
+        return true;
     }
 }
